@@ -346,6 +346,9 @@ dialog::backdrop{background:#3c243055;backdrop-filter:blur(3px)}
   <div class="modal-body" id="reportContent"></div>
 </dialog>
 
+<!-- Khung thông báo nhỏ ở dưới màn hình -->
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
 <!-- Khung thông báo giữa màn hình khi hoàn thành bài học -->
 <div id="star-toast">✨ Giỏi lắm! +1 điểm ⭐ 🎉</div>
 
@@ -402,6 +405,7 @@ let filterSubject='all';
 let isAdminUnlocked = false;
 
 function save(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}catch(e){console.warn('Lỗi lưu dữ liệu.');}}
+function toast(msg){const t=$('toast');if(t){t.textContent=msg;t.style.display='block';clearTimeout(toast.timer);toast.timer=setTimeout(()=>t.style.display='none',2600);}}
 function subjectClass(s){return 'sub-'+s.replaceAll(' ','-');}
 function tasksForMonth(){return state.tasks.filter(t=>monthISO(t.date)===selectedMonth);}
 function weekTasks(start=weekStart){const end=dateAdd(start,6);return state.tasks.filter(t=>t.date>=start&&t.date<=end);}
@@ -457,7 +461,7 @@ function renderTasks(){
  const y = Number(selectedMonth.split('-')[0]);
  const m = Number(selectedMonth.split('-')[1]);
  
- $('phase').innerHTML=`<b>Giai đoạn học tập (Tháng ${m}/${y}):</b> ${escapeHTML(phaseForMonth(m))}`;
+ $('phase').innerHTML=`<b>Giai đoạn học tập (Tháng ${m}/${y}):</b>${escapeHTML(phaseForMonth(m))}`;
  
  let days = [selectedDate];
  
@@ -483,8 +487,7 @@ function renderTasks(){
      <span class="subject ${subjectClass(t.subject)}">${escapeHTML(t.subject)}</span>
      <div>
        <div class="task-title">${escapeHTML(t.title)} <span style="font-size:12px; color:#a46d22; font-weight:700;">(+${pnts}⭐)</span></div>
-       ${detailHtml}
-       ${completedHtml}
+       ${detailHtml}${completedHtml}
      </div>
      ${actionsHtml}
     </div>`;
@@ -501,8 +504,7 @@ function renderTasks(){
       <span class="kpi-tag">KPI ngày: ${kpi}% · ${dDone}/${ts.length} bài</span>
     </div>
     <div class="task-list">
-      ${cards}
-      ${addBtnHtml}
+      ${cards}${addBtnHtml}
     </div>
   </article>`;
  }).join('');
@@ -545,323 +547,3 @@ function renderRewards(){
 
     return `<div class="reward-card">
      <div class="row-between"><h3>🎁 ${escapeHTML(r.name)}</h3><span class="points">${Number(r.cost)} ⭐</span></div>
-     <p>${escapeHTML(rDesc)}</p>
-     <div class="flex">
-       <button class="btn btn-primary btn-small" data-redeem="${r.id}" ${isDisabled}>Đổi quà</button>
-       ${rewardActions}
-     </div>
-   </div>`;
- }).join('') : '<div class="empty">Chưa có phần thưởng.</div>';
-
- if (state.redemptions && state.redemptions.length > 0) {
-    let historyHtml = state.redemptions.slice().reverse().map(redemption => {
-      return `
-        <div class="redeem-item">
-          <div class="info">
-            <strong>${escapeHTML(redemption.name)}</strong> (-${redemption.cost}⭐)
-            <br><span style="font-size:10px">${escapeHTML(shortDate(redemption.date))}</span>
-          </div>
-          <button class="icon-btn" data-undo-redeem="${redemption.id}" title="Hoàn tác để lấy lại điểm">↩️ Hủy</button>
-        </div>
-      `;
-    }).join('');
-    $('redeemHistoryList').innerHTML = historyHtml;
-  } else {
-    $('redeemHistoryList').innerHTML = '<div class="small-note" style="text-align:center">Chưa đổi quà nào.</div>';
-  }
-}
-
-function renderGoal(){
- const ts=weekTasks(),p=pct(doneCount(ts),ts.length);
- $('weekKpiLabel').textContent=p+'\%';$('weekKpiBar').style.width=p+'%';$('goalLabel').textContent=state.goal+'\%';$('goalMessage').textContent=p>=state.goal?'🎉 Tuyệt vời! Con đã đạt mục tiêu tuần này!':`Cố lên nhé! Còn ${Math.max(0,state.goal-p)} điểm phần trăm.`;
-}
-
-function renderHistory(){
- const f=$('historyFilter').value, q=$('historySearch').value.trim().toLocaleLowerCase('vi');
- let ts=[...state.tasks].sort((a,b)=>b.date.localeCompare(a.date));
- ts=ts.filter(t=>{
-   const late = !t.done && (t.due ? t.due : t.date) < todayISO();
-   const ok = (f==='all') ? true : ((f==='done'&&t.done) ? true : ((f==='pending'&&!t.done&&!late) ? true : ((f==='late'&&late) ? true : false)));
-   let titleLower = t.title ? t.title.toLocaleLowerCase('vi') : '';
-   let detailLower = t.detail ? t.detail.toLocaleLowerCase('vi') : '';
-   let matchQ = !q ? true : (titleLower.includes(q) || detailLower.includes(q));
-   return ok && matchQ;
- });
- 
- $('historyList').innerHTML=ts.length?ts.slice(0,100).map(t=>{
-   const late = !t.done && (t.due ? t.due : t.date) < todayISO();
-   const status = t.done ? '<span class="status done">Hoàn thành</span>' : (late ? '<span class="status late">Quá hạn</span>' : '<span class="status pending">Chưa xong</span>');
-   let dueText = t.due ? ' · Hạn: '+escapeHTML(shortDate(t.due)) : '';
-   return `<div class="history-row"><div class="row-between" style="align-items:flex-start"><div><b>${escapeHTML(t.title)}</b><div class="small-note">${escapeHTML(t.subject)} · Giao: ${escapeHTML(shortDate(t.date))}${dueText}</div></div>${status}</div></div>`;
- }).join('') : '<div class="empty">Không tìm thấy bài tập.</div>';
-}
-
-function openTask(task=null,date=selectedDate){
- $('taskForm').reset();$('taskId').value = task ? task.id : '';
- $('taskDialogTitle').textContent = task ? '✏️ Sửa bài tập' : '🌸 Giao bài tập mới';
- $('taskTitle').value = task ? task.title : '';
- $('taskSubject').value = task ? task.subject : 'Toán';
- $('taskDate').value = task ? task.date : date;
- $('taskDetail').value = task ? task.detail : '';
- $('taskPoints').value = task && task.points !== undefined ? task.points : 1;
- $('taskDue').value = task ? task.due : '';
- $('taskDialog').showModal();
-}
-
-function openReward(reward=null){
- $('rewardForm').reset();$('rewardId').value = reward ? reward.id : '';
- $('rewardDialogTitle').textContent = reward ? '✏️ Sửa phần thưởng' : '🎁 Thêm phần thưởng';
- $('rewardName').value = reward ? reward.name : '';
- $('rewardDesc').value = reward ? reward.desc : '';
- $('rewardCost').value = reward && reward.cost !== undefined ? reward.cost : 10;
- $('rewardDialog').showModal();
-}
-
-function downloadFile(name,content,type='application/json'){
- const blob=new Blob([content],{type}),url=URL.createObjectURL(blob),a=document.createElement('a');
- a.href=url; a.download=name; document.body.appendChild(a); a.click(); a.remove();
- setTimeout(()=>URL.revokeObjectURL(url),1000);
-}
-
-function exportData(){
-  downloadFile(`goc-hoc-tap-${todayISO()}.json`,JSON.stringify(state,null,2));
-}
-
-function weeklyReport(){
- const ts=weekTasks(),done=doneCount(ts),p=pct(done,ts.length),start=weekStart,end=dateAdd(start,6);
- const bySubject=SUBJECTS.map(s=>{const a=ts.filter(t=>t.subject===s);return a.length?`<li>${escapeHTML(s)}: ${doneCount(a)}/${a.length} bài</li>`:''}).join('');
- $('reportContent').innerHTML=`<p><b>Thời gian:</b> ${escapeHTML(shortDate(start))} – ${escapeHTML(shortDate(end))}</p><div class="stat" style="margin:12px 0"><div class="label">KPI TUẦN</div><div class="value">${p}%</div><div class="progress"><span style="width:${p}%"></span></div><div class="hint">${done}/${ts.length} bài đã hoàn thành · Mục tiêu ${state.goal}%</div></div><h3 class="section-title">Theo từng môn</h3><ul>${bySubject ? bySubject : '<li>Chưa có bài tập trong tuần này.</li>'}</ul><p>${p>=state.goal?'🌟 Con đã đạt mục tiêu!':'🌱 Cố gắng tuần sau nhé!'}</p><p class="small-note">Điểm hiện có: ${earnedPoints()} ⭐.</p>`;
- $('reportDialog').showModal();
-}
-
-// Hàm đồng bộ tối ưu hóa, hỗ trợ xử lý mượt mà trên môi trường web HTTPS (GitHub Pages)
-async function syncFromGAS() {
-  const url = "https://script.google.com/macros/s/AKfycbzAoMc2wRYBvra-1OkSpXI0P-EJ9ZkO9Op4yLuV7WFXCNzo_mBIdE1yOmxPjA0Kuurc4w/exec";
-  try {
-    const response = await fetch(url, { method: 'GET', redirect: 'follow' });
-    const result = await response.json();
-    if (Array.isArray(result)) {
-      result.forEach(item => {
-        if (!item.taskId) return;
-        
-        let parseDate = (dStr) => {
-          if (!dStr) return todayISO();
-          let str = String(dStr);
-          if (str.includes("GMT") || str.includes("Oct") || str.includes("Jan") || str.includes("Feb") || str.includes("Mar") || str.includes("Apr") || str.includes("May") || str.includes("Jun") || str.includes("Jul") || str.includes("Aug") || str.includes("Sep") || str.includes("Nov") || str.includes("Dec")) {
-            let dObj = new Date(str);
-            if (!isNaN(dObj.getTime())) {
-              let y = dObj.getFullYear();
-              let m = String(dObj.getMonth() + 1).padStart(2, '0');
-              let d = String(dObj.getDate()).padStart(2, '0');
-              return `${y}-${m}-${d}`;
-            }
-          }
-          if (str.includes('/')) {
-            const parts = str.split('/');
-            if (parts.length === 3) {
-              return `${parts[2]}-${parts[1].padStart(2,'0')}-${parts[0].padStart(2,'0')}`;
-            }
-          }
-          return str;
-        };
-
-        const formattedDate = parseDate(item.date);
-        const formattedDue = item.due ? parseDate(item.due) : '';
-
-        const existing = state.tasks.find(t => t.id === item.taskId);
-        if (existing) {
-          existing.title = item.title !== undefined ? item.title : existing.title;
-          existing.subject = item.subject !== undefined ? item.subject : existing.subject;
-          existing.date = formattedDate;
-          existing.due = formattedDue;
-          existing.detail = item.detail !== undefined ? item.detail : existing.detail;
-          existing.points = item.points !== undefined ? Number(item.points) : existing.points;
-        } else {
-          state.tasks.push({
-            id: item.taskId,
-            title: item.title || 'Bài tập mới',
-            subject: item.subject || 'Toán',
-            date: formattedDate,
-            due: formattedDue,
-            detail: item.detail || '',
-            points: Number(item.points) || 1,
-            done: false,
-            completedAt: ''
-          });
-        }
-      });
-      save(); 
-      render(); 
-      alert('Đồng bộ Google Sheets thành công! 🎉');
-    } else {
-      alert('Dữ liệu trả về từ Google Sheets không hợp lệ.');
-    }
-  } catch (err) { 
-    console.warn('Lỗi kết nối đồng bộ: ', err); 
-    alert('Không thể kết nối tới Google Sheets. Hãy kiểm tra lại đường dẫn Apps Script hoặc quyền "Anyone".');
-  }
-}
-
-$('btnRoleKid').addEventListener('click', () => {
-  isAdminUnlocked = false;
-  $('appBody').classList.remove('unlocked');
-  $('btnRoleKid').classList.add('active');$('btnRoleMom').classList.remove('active');
-  render();
-});
-
-$('btnRoleMom').addEventListener('click', () => {
-  if (!isAdminUnlocked) {
-    const pwd = prompt("Nhập mật khẩu của Mẹ để mở khóa:");
-    if (pwd === "2017") {
-      isAdminUnlocked = true;
-      $('appBody').classList.add('unlocked');
-      $('btnRoleMom').classList.add('active');$('btnRoleKid').classList.remove('active');
-      render();
-    } else if (pwd !== null) {
-      alert('Sai mật khẩu!');
-    }
-  } else {
-    $('btnRoleMom').classList.add('active');$('btnRoleKid').classList.remove('active');
-  }
-});
-
-document.addEventListener('click', e => {
-  const tab = e.target.closest('[data-month]');
-  if(tab) {
-    selectedMonth = tab.dataset.month;
-    selectedDate = selectedMonth === monthISO(selectedDate) ? selectedDate : selectedMonth + '-01';
-    weekStart = mondayOf(selectedDate);
-    render();
-  }
-});
-
-$('yearSelect').addEventListener('change', e => {
-  selectedYear = e.target.value;
-  let mm = selectedMonth.split('-')[1] ? selectedMonth.split('-')[1] : '01';
-  selectedMonth = `${selectedYear}-${mm}`;
-  selectedDate = `${selectedMonth}-01`;
-  weekStart = mondayOf(selectedDate);
-  render();
-});
-
-$('filterSubject').addEventListener('change',e=>{filterSubject=e.target.value;renderTasks();});
-$('weekDays').addEventListener('click',e=>{const b=e.target.closest('[data-date]');if(!b)return;selectedDate=b.dataset.date;weekStart=mondayOf(selectedDate);selectedMonth=monthISO(selectedDate);selectedYear=selectedMonth.split('-')[0];render();});$('prevWeek').addEventListener('click',()=>{weekStart=dateAdd(weekStart,-7);selectedDate=weekStart;selectedMonth=monthISO(selectedDate);selectedYear=selectedMonth.split('-')[0];render();});
-$('nextWeek').addEventListener('click',()=>{weekStart=dateAdd(weekStart,7);selectedDate=weekStart;selectedMonth=monthISO(selectedDate);selectedYear=selectedMonth.split('-')[0];render();});$('todayBtn').addEventListener('click',()=>{selectedDate=todayISO();selectedMonth=monthISO(todayISO());selectedYear=selectedMonth.split('-')[0];weekStart=mondayOf(selectedDate);render();});
-
-// Xử lý sự kiện hoàn thành bài tập (pháo hoa + thông báo giữa màn hình + âm thanh vỗ tay)
-$('taskDays').addEventListener('click',e=>{
- const toggle=e.target.closest('[data-toggle]');
- if(toggle){
-   const t=state.tasks.find(x=>x.id===toggle.dataset.toggle);
-   if(!t)return;
-   t.done=toggle.checked;
-   t.completedAt=t.done?new Date().toISOString():'';
-   save();render();
-   
-   if (t.done) {
-     // 1. Pháo hoa bắn tung tóe
-     confetti({
-       particleCount: 150,
-       spread: 100,
-       origin: { y: 0.5 }
-     });
-
-     // 2. Hiện bảng thông báo "Giỏi lắm! +1 điểm" ở giữa màn hình
-     const starToast = $('star-toast');
-     starToast.innerHTML = `✨ Giỏi lắm! +${Number(t.points) ? Number(t.points) : 1} điểm ⭐ 🎉`;
-     starToast.classList.remove('show-toast');
-     void starToast.offsetWidth; // Reset animation
-     starToast.classList.add('show-toast');
-
-     // 3. Phát âm thanh vỗ tay chúc mừng
-     const applause = $('applauseAudio');
-     if (applause) {
-       applause.currentTime = 0;
-       applause.play().catch(err => console.log("Trình duyệt chặn autoplay:", err));
-     }
-   }
-   return;
- }
- const edit=e.target.closest('[data-edit-task]');if(edit){const t=state.tasks.find(x=>x.id===edit.dataset.editTask);if(t)openTask(t);return;}
- const del=e.target.closest('[data-delete-task]');if(del){const t=state.tasks.find(x=>x.id===del.dataset.deleteTask);if(t&&confirm(`Xóa bài “${t.title}”?`)){state.tasks=state.tasks.filter(x=>x.id!==t.id);save();render();}return;}
- const add=e.target.closest('[data-add-date]');if(add)openTask(null,add.dataset.addDate);
-});
-
-$('taskForm').addEventListener('submit',e=>{
- e.preventDefault();
- const id=$('taskId').value;
- const old=state.tasks.find(t=>t.id===id);
- const date=$('taskDate').value;
- if(!date)return;
- const t={
-   id: id ? id : uid(),
-   title:$('taskTitle').value.trim(),
-   subject:$('taskSubject').value,
-   date: date,
-   due:$('taskDue').value,
-   detail:$('taskDetail').value.trim(),
-   points:Math.max(0,Number($('taskPoints').value) ? Number($('taskPoints').value) : 0),
-   done:old ? old.done : false,
-   completedAt:old ? old.completedAt : ''
- };
- if(!t.title)return;
- if(old) {
-   state.tasks=state.tasks.map(x=>x.id===id?t:x);
- } else {
-   state.tasks.push(t);
- }
- selectedDate=date;
- selectedMonth=monthISO(date);
- selectedYear=selectedMonth.split('-')[0];
- weekStart=mondayOf(date);
- save();
- $('taskDialog').close();
- render();
-});
-
-$('addRewardBtn').addEventListener('click',()=>openReward());
-
-$('rewardsContainer').addEventListener('click',e=>{
- const redeem=e.target.closest('[data-redeem]');
- if(redeem){
-   const r=state.rewards.find(x=>x.id===redeem.dataset.redeem);
-   if(!r)return;
-   if(earnedPoints()<Number(r.cost)){alert('Con chưa đủ điểm để đổi phần quà này.');return;}
-   if(confirm(`Đổi “${r.name}” với ${r.cost} điểm nhé?`)){
-     state.redemptions.push({id:uid(),rewardId:r.id,name:r.name,cost:Number(r.cost),date:todayISO()});
-     save();
-     renderStats(); 
-     renderRewards();
-   }
-   return;
- }
- 
- const undoRedeem = e.target.closest('[data-undo-redeem]');
- if (undoRedeem) {
-    const rId = undoRedeem.dataset.undoRedeem;
-    const item = state.redemptions.find(x => x.id === rId);
-    if(item && confirm(`Hoàn tác phần quà “${item.name}”? Điểm sẽ được cộng lại.`)) {
-       state.redemptions = state.redemptions.filter(x => x.id !== rId);
-       save();
-       renderStats();
-       renderRewards();
-    }
-    return;
- }
-
- const edit=e.target.closest('[data-edit-reward]');if(edit){const r=state.rewards.find(x=>x.id===edit.dataset.editReward);if(r)openReward(r);return;}
- const del=e.target.closest('[data-delete-reward]');if(del){const r=state.rewards.find(x=>x.id===del.dataset.deleteReward);if(r&&confirm(`Xóa phần thưởng “${r.name}”?`)){state.rewards=state.rewards.filter(x=>x.id!==r.id);save();renderRewards();}}
-});
-
-$('rewardForm').addEventListener('submit',e=>{
- e.preventDefault();
- const id=$('rewardId').value;
- const old=state.rewards.find(r=>r.id===id);
- const r={
-   id: id ? id : uid(),
-   name:$('rewardName').value.trim(),
-   desc:$('rewardDesc').value.trim(),
-   cost:Math.max(1,Number($('rewardCost').value) ? Number($('rewardCost').value) : 1)
- };
- if(old){
-   state.rewards=state.rewards.map(x=>x.id===
