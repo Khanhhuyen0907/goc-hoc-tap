@@ -165,7 +165,7 @@ dialog::backdrop{background:#3c243055;backdrop-filter:blur(3px)}
   <header class="hero">
     <div class="hero-top">
       <div>
-        <div class="eyebrow">🌸 Góc học tập của Khánh Huyền</div>
+        <div class="eyebrow">🌸 GÓC HỌC TẬP CỦA KHÁNH HUYỀN</div>
         <h1>Hôm nay mình cùng cố gắng nhé!</h1>
         <p class="subtitle">Mỗi bài học hoàn thành là một bước tiến nhỏ. Tích vào ô vuông sau khi con học xong để nhận sao và tiến gần hơn tới món quà yêu thích.</p>
       </div>
@@ -340,8 +340,8 @@ dialog::backdrop{background:#3c243055;backdrop-filter:blur(3px)}
 <!-- Khung thông báo giữa màn hình khi hoàn thành bài học -->
 <div id="star-toast">✨ Giỏi lắm con gái iu! +1 điểm ⭐ 🎉</div>
 
-<!-- Âm thanh vỗ tay chúc mừng (âm thanh vui nhộn style Kidup) -->
-<audio id="applauseAudio" src="https://assets.mixkit.co/active_storage/sfx/2020/2020-preview.mp3" preload="auto"></audio>
+<!-- Âm thanh reo hò chiến thắng (Hooray) -->
+<audio id="applauseAudio" src="https://assets.mixkit.co/active_storage/sfx/2042/2042-preview.mp3" preload="auto"></audio>
 
 <script>
 (() => {
@@ -628,7 +628,7 @@ function weeklyReport(){
  $('reportDialog').showModal();
 }
 
-// Đồng bộ tự động ngầm với Google Sheets (Giữ nguyên logic gốc của bạn)
+// Đồng bộ tự động ngầm với Google Sheets (Đã khắc phục lỗi ngày tháng hiển thị undefined)
 async function syncFromGAS() {
   const url = "https://script.google.com/macros/s/AKfycbzAoMc2wRYBvra-1OkSpXI0P-EJ9ZkO9Op4yLuV7WFXCNzo_mBIdE1yOmxPjA0Kuurc4w/exec";
   try {
@@ -642,6 +642,7 @@ async function syncFromGAS() {
         let parseDate = (dStr) => {
           if (!dStr) return todayISO();
           let str = String(dStr);
+          // Nếu nhận chuỗi định dạng dài kiểu "Tue Oct 13 2026..."
           if (str.includes("GMT") || str.includes("Oct") || str.includes("Jan") || str.includes("Feb") || str.includes("Mar") || str.includes("Apr") || str.includes("May") || str.includes("Jun") || str.includes("Jul") || str.includes("Aug") || str.includes("Sep") || str.includes("Nov") || str.includes("Dec")) {
             let dObj = new Date(str);
             if (!isNaN(dObj.getTime())) {
@@ -651,6 +652,7 @@ async function syncFromGAS() {
               return `${y}-${m}-${d}`;
             }
           }
+          // Nếu định dạng dd/mm/yyyy
           if (str.includes('/')) {
             const parts = str.split('/');
             if (parts.length === 3) {
@@ -742,7 +744,7 @@ $('filterSubject').addEventListener('change',e=>{filterSubject=e.target.value;re
 $('weekDays').addEventListener('click',e=>{const b=e.target.closest('[data-date]');if(!b)return;selectedDate=b.dataset.date;weekStart=mondayOf(selectedDate);selectedMonth=monthISO(selectedDate);selectedYear=selectedMonth.split('-')[0];render();});$('prevWeek').addEventListener('click',()=>{weekStart=dateAdd(weekStart,-7);selectedDate=weekStart;selectedMonth=monthISO(selectedDate);selectedYear=selectedMonth.split('-')[0];render();});
 $('nextWeek').addEventListener('click',()=>{weekStart=dateAdd(weekStart,7);selectedDate=weekStart;selectedMonth=monthISO(selectedDate);selectedYear=selectedMonth.split('-')[0];render();});$('todayBtn').addEventListener('click',()=>{selectedDate=todayISO();selectedMonth=monthISO(todayISO());selectedYear=selectedMonth.split('-')[0];weekStart=mondayOf(selectedDate);render();});
 
-// Xử lý sự kiện hoàn thành bài tập (pháo hoa, vỗ tay và thông báo giữa màn hình)
+// Xử lý sự kiện hoàn thành bài tập (pháo hoa, tiếng reo hò chiến thắng và thông báo giữa màn hình)
 $('taskDays').addEventListener('click',e=>{
  const toggle=e.target.closest('[data-toggle]');
  if(toggle){
@@ -760,13 +762,13 @@ $('taskDays').addEventListener('click',e=>{
        origin: { y: 0.5 }
      });
 
-     // 2. Hiện bảng thông báo "Giỏi lắm con gái iu! +1 điểm" ở giữa màn hình
+     // 2. Hiện bảng thông báo chính giữa màn hình
      const starToast = $('star-toast');
      starToast.classList.remove('show-toast');
      void starToast.offsetWidth; // Reset animation
      starToast.classList.add('show-toast');
 
-     // 3. Phát âm thanh vỗ tay vui nhộn
+     // 3. Phát âm thanh hooray reo hò chiến thắng
      const applause = $('applauseAudio');
      if (applause) {
        applause.currentTime = 0;
