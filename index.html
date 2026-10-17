@@ -116,7 +116,7 @@ dialog::backdrop{background:#3c243055;backdrop-filter:blur(3px)}
   padding: 24px 48px;
   border-radius: 24px;
   font-weight: 900;
-  font-size: 32px;
+  font-size: 28px;
   text-align: center;
   box-shadow: 0 10px 30px rgba(255, 117, 140, 0.5);
   z-index: 9999;
@@ -157,7 +157,7 @@ dialog::backdrop{background:#3c243055;backdrop-filter:blur(3px)}
 .unlocked .admin-only-block { display: block !important; }
 
 @media(max-width:850px){.layout{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.hero-top{display:block}.today-pill{display:inline-block;margin-top:14px}.task{grid-template-columns:24px 78px minmax(0,1fr)}.task-actions{grid-column:3}.task-actions .icon-btn{padding:5px 8px}}
-@media(max-width:480px){.app{padding:12px 9px 35px}.hero{padding:21px 18px}.panel-head,.panel-body{padding:14px}.phase{margin:12px}.day-card{margin:0 10px 12px}.task-list{padding:4px 10px 8px}.task{gap:7px;grid-template-columns:22px 73px minmax(0,1fr)}.stat{padding:12px}.stat .value{font-size:23px}.week-day .dow{font-size:9px}#star-toast { font-size: 22px; padding: 16px 24px; width: 90%; }}
+@media(max-width:480px){.app{padding:12px 9px 35px}.hero{padding:21px 18px}.panel-head,.panel-body{padding:14px}.phase{margin:12px}.day-card{margin:0 10px 12px}.task-list{padding:4px 10px 8px}.task{gap:7px;grid-template-columns:22px 73px minmax(0,1fr)}.stat{padding:12px}.stat .value{font-size:23px}.week-day .dow{font-size:9px}#star-toast { font-size: 20px; padding: 16px 24px; width: 90%; }}
 </style>
 </head>
 <body id="appBody">
@@ -165,7 +165,7 @@ dialog::backdrop{background:#3c243055;backdrop-filter:blur(3px)}
   <header class="hero">
     <div class="hero-top">
       <div>
-        <div class="eyebrow">🌸 Góc học tập của Khánh Huyền</div>
+        <div class="eyebrow">🌸 GÓC HỌC TẬP CỦA KHÁNH HUYỀN</div>
         <h1>Hôm nay mình cùng cố gắng nhé!</h1>
         <p class="subtitle">Mỗi bài học hoàn thành là một bước tiến nhỏ. Tích vào ô vuông sau khi con học xong để nhận sao và tiến gần hơn tới món quà yêu thích.</p>
       </div>
@@ -340,7 +340,7 @@ dialog::backdrop{background:#3c243055;backdrop-filter:blur(3px)}
 <!-- Khung thông báo giữa màn hình khi hoàn thành bài học -->
 <div id="star-toast">✨ Giỏi lắm con gái iu! +1 điểm ⭐ 🎉</div>
 
-<!-- Âm thanh vỗ tay chúc mừng -->
+<!-- Âm thanh vỗ tay chúc mừng (âm thanh vui nhộn style Kidup) -->
 <audio id="applauseAudio" src="https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3" preload="auto"></audio>
 
 <script>
@@ -628,7 +628,7 @@ function weeklyReport(){
  $('reportDialog').showModal();
 }
 
-// Đồng bộ tự động ngầm với Google Sheets (Đã khắc phục lỗi ngày tháng hiển thị undefined)
+// Đồng bộ tự động ngầm với Google Sheets (Giữ nguyên logic gốc của bạn)
 async function syncFromGAS() {
   const url = "https://script.google.com/macros/s/AKfycbzAoMc2wRYBvra-1OkSpXI0P-EJ9ZkO9Op4yLuV7WFXCNzo_mBIdE1yOmxPjA0Kuurc4w/exec";
   try {
@@ -642,7 +642,6 @@ async function syncFromGAS() {
         let parseDate = (dStr) => {
           if (!dStr) return todayISO();
           let str = String(dStr);
-          // Nếu nhận chuỗi định dạng dài kiểu "Tue Oct 13 2026..."
           if (str.includes("GMT") || str.includes("Oct") || str.includes("Jan") || str.includes("Feb") || str.includes("Mar") || str.includes("Apr") || str.includes("May") || str.includes("Jun") || str.includes("Jul") || str.includes("Aug") || str.includes("Sep") || str.includes("Nov") || str.includes("Dec")) {
             let dObj = new Date(str);
             if (!isNaN(dObj.getTime())) {
@@ -652,7 +651,6 @@ async function syncFromGAS() {
               return `${y}-${m}-${d}`;
             }
           }
-          // Nếu định dạng dd/mm/yyyy
           if (str.includes('/')) {
             const parts = str.split('/');
             if (parts.length === 3) {
@@ -744,7 +742,7 @@ $('filterSubject').addEventListener('change',e=>{filterSubject=e.target.value;re
 $('weekDays').addEventListener('click',e=>{const b=e.target.closest('[data-date]');if(!b)return;selectedDate=b.dataset.date;weekStart=mondayOf(selectedDate);selectedMonth=monthISO(selectedDate);selectedYear=selectedMonth.split('-')[0];render();});$('prevWeek').addEventListener('click',()=>{weekStart=dateAdd(weekStart,-7);selectedDate=weekStart;selectedMonth=monthISO(selectedDate);selectedYear=selectedMonth.split('-')[0];render();});
 $('nextWeek').addEventListener('click',()=>{weekStart=dateAdd(weekStart,7);selectedDate=weekStart;selectedMonth=monthISO(selectedDate);selectedYear=selectedMonth.split('-')[0];render();});$('todayBtn').addEventListener('click',()=>{selectedDate=todayISO();selectedMonth=monthISO(todayISO());selectedYear=selectedMonth.split('-')[0];weekStart=mondayOf(selectedDate);render();});
 
-// Xử lý sự kiện hoàn thành bài tập kèm pháo hoa, vỗ tay và thông báo ở giữa màn hình
+// Xử lý sự kiện hoàn thành bài tập (pháo hoa, vỗ tay và thông báo giữa màn hình)
 $('taskDays').addEventListener('click',e=>{
  const toggle=e.target.closest('[data-toggle]');
  if(toggle){
@@ -762,13 +760,13 @@ $('taskDays').addEventListener('click',e=>{
        origin: { y: 0.5 }
      });
 
-     // 2. Hiện bảng thông báo chính giữa màn hình
+     // 2. Hiện bảng thông báo "Giỏi lắm con gái iu! +1 điểm" ở giữa màn hình
      const starToast = $('star-toast');
      starToast.classList.remove('show-toast');
      void starToast.offsetWidth; // Reset animation
      starToast.classList.add('show-toast');
 
-     // 3. Phát âm thanh vỗ tay chúc mừng
+     // 3. Phát âm thanh vỗ tay vui nhộn
      const applause = $('applauseAudio');
      if (applause) {
        applause.currentTime = 0;
