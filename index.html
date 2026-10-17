@@ -5,6 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="author" content="Ngoc Anh">
 <title>Góc học tập của Huyền 🌸</title>
+
+<!-- Nhúng Google Fonts: Dancing Script (chữ viết tay nghệ thuật) và Quicksand -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+
+<!-- Thư viện hiệu ứng pháo hoa (Canvas Confetti) -->
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
 <style>
 :root{
   --pink:#f6a9bd;--pink-dark:#c95c78;--pink-soft:#fff0f4;--pink-tab:#ffd3df;
@@ -13,14 +22,24 @@
   --purple:#eee7ff;--shadow:0 8px 24px rgba(195,105,133,.10);
 }
 *{box-sizing:border-box}
-body{margin:0;background:linear-gradient(180deg,#fff5f7 0,#fffafb 330px,#fff 100%);font-family:"Segoe UI",Tahoma,Arial,sans-serif;color:var(--ink);font-size:15px}
+body{margin:0;background:linear-gradient(180deg,#fff5f7 0,#fffafb 330px,#fff 100%);font-family:"Quicksand", "Segoe UI", Tahoma, Arial, sans-serif;color:var(--ink);font-size:15px}
 button,input,select,textarea{font:inherit}
 button{cursor:pointer}
 .app{max-width:1220px;margin:0 auto;padding:24px 18px 50px}
 .hero{position:relative;overflow:hidden;background:linear-gradient(120deg,#ffe1e9,#fff0f4 55%,#f8eaff);border:1px solid #f5cbd7;border-radius:24px;padding:28px 30px;box-shadow:var(--shadow)}
 .hero:after{content:"✿";position:absolute;right:28px;top:-22px;font-size:150px;color:#f3a8bf;opacity:.22;transform:rotate(15deg)}
 .hero-top{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;position:relative;z-index:1}
-.eyebrow{font-weight:800;color:var(--pink-dark);letter-spacing:.02em;text-transform:uppercase;font-size:40px}
+
+/* Chuyển tiêu đề thành chữ nghệ thuật mềm mại */
+.eyebrow{
+  font-family: 'Dancing Script', cursive, sans-serif;
+  font-weight: 700;
+  color: var(--pink-dark);
+  letter-spacing: 0.02em;
+  text-transform: none;
+  font-size: 45px;
+}
+
 h1{margin:7px 0 7px;font-size:clamp(26px,4vw,38px);line-height:1.12;color:#9f4963}
 .subtitle{color:#806c75;margin:0;max-width:660px;line-height:1.6}
 .today-pill{background:#fff9fb;border:1px solid #f4cad7;border-radius:999px;padding:10px 15px;font-weight:700;color:#a6536c;white-space:nowrap}
@@ -94,7 +113,40 @@ dialog::backdrop{background:#3c243055;backdrop-filter:blur(3px)}
 .modal-head h2{margin:0;font-size:19px;color:#a64e68}
 .modal-body{padding:20px 22px;max-height:75vh;overflow:auto}
 .close{border:0;background:transparent;font-size:23px;color:#a64e68}
-.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#55434b;color:#fff;padding:12px 18px;border-radius:12px;box-shadow:var(--shadow);z-index:10;display:none;max-width:90%;text-align:center}
+
+/* KHUNG THÔNG BÁO CHÍNH GIỮA MÀN HÌNH - CỠ CHỮ THẬT TO */
+#star-toast {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  background: linear-gradient(135deg, #ff758c, #ff7eb3);
+  color: white;
+  padding: 24px 48px;
+  border-radius: 24px;
+  font-weight: 900;
+  font-size: 32px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(255, 117, 140, 0.5);
+  z-index: 9999;
+  display: none;
+  pointer-events: none;
+  border: 3px solid #fff;
+}
+
+.show-toast {
+  display: block !important;
+  animation: popCenter 1.8s ease forwards;
+}
+
+@keyframes popCenter {
+  0% { transform: translate(-50%, -50%) scale(0.3); opacity: 0; }
+  20% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+  35% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+  80% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+  100% { transform: translate(-50%, -50%) scale(0.8); opacity: 0; }
+}
+
 .section-title{margin:0 0 12px;font-size:15px;color:#a64e68}
 
 /* CSS lịch sử đổi quà */
@@ -114,7 +166,7 @@ dialog::backdrop{background:#3c243055;backdrop-filter:blur(3px)}
 .unlocked .admin-only-block { display: block !important; }
 
 @media(max-width:850px){.layout{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.hero-top{display:block}.today-pill{display:inline-block;margin-top:14px}.task{grid-template-columns:24px 78px minmax(0,1fr)}.task-actions{grid-column:3}.task-actions .icon-btn{padding:5px 8px}}
-@media(max-width:480px){.app{padding:12px 9px 35px}.hero{padding:21px 18px}.panel-head,.panel-body{padding:14px}.phase{margin:12px}.day-card{margin:0 10px 12px}.task-list{padding:4px 10px 8px}.task{gap:7px;grid-template-columns:22px 73px minmax(0,1fr)}.stat{padding:12px}.stat .value{font-size:23px}.week-day .dow{font-size:9px}}
+@media(max-width:480px){.app{padding:12px 9px 35px}.hero{padding:21px 18px}.panel-head,.panel-body{padding:14px}.phase{margin:12px}.day-card{margin:0 10px 12px}.task-list{padding:4px 10px 8px}.task{gap:7px;grid-template-columns:22px 73px minmax(0,1fr)}.stat{padding:12px}.stat .value{font-size:23px}.week-day .dow{font-size:9px}#star-toast { font-size: 24px; padding: 18px 30px; width: 90%; }}
 </style>
 </head>
 <body id="appBody">
@@ -122,7 +174,7 @@ dialog::backdrop{background:#3c243055;backdrop-filter:blur(3px)}
   <header class="hero">
     <div class="hero-top">
       <div>
-        <div class="eyebrow">🌸 GÓC HỌC TẬP CỦA KHÁNH HUYỀN</div>
+        <div class="eyebrow">🌸 Góc học tập của Khánh Huyền</div>
         <h1>Hôm nay mình cùng cố gắng nhé!</h1>
         <p class="subtitle">Mỗi bài học hoàn thành là một bước tiến nhỏ. Tích vào ô vuông sau khi con học xong để nhận sao và tiến gần hơn tới món quà yêu thích.</p>
       </div>
@@ -292,7 +344,9 @@ dialog::backdrop{background:#3c243055;backdrop-filter:blur(3px)}
   <div class="modal-head"><h2>🌟 Tổng kết tuần</h2><button class="close" data-close="reportDialog">×</button></div>
   <div class="modal-body" id="reportContent"></div>
 </dialog>
-<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<!-- Khung thông báo chính giữa màn hình khi hoàn thành bài học -->
+<div id="star-toast">✨ Giỏi lắm! +1 điểm ⭐ 🎉</div>
 
 <script>
 (() => {
@@ -343,8 +397,7 @@ let selectedYear = selectedMonth.split('-')[0] ? selectedMonth.split('-')[0] : '
 let filterSubject='all';
 let isAdminUnlocked = false;
 
-function save(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}catch(e){toast('Lỗi lưu dữ liệu.');}}
-function toast(msg){const t=$('toast');t.textContent=msg;t.style.display='block';clearTimeout(toast.timer);toast.timer=setTimeout(()=>t.style.display='none',2600);}
+function save(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}catch(e){console.warn('Lỗi lưu dữ liệu.');}}
 function subjectClass(s){return 'sub-'+s.replaceAll(' ','-');}
 function tasksForMonth(){return state.tasks.filter(t=>monthISO(t.date)===selectedMonth);}
 function weekTasks(start=weekStart){const end=dateAdd(start,6);return state.tasks.filter(t=>t.date>=start&&t.date<=end);}
@@ -359,8 +412,7 @@ function earnedPoints(){
 
 function render(){
  $('todayPill').textContent='📅 '+new Date().toLocaleDateString('vi-VN',{weekday:'long',day:'2-digit',month:'long'});
- if($('yearSelect').value !== selectedYear) {$('yearSelect').value = selectedYear;
- }
+ if($('yearSelect').value !== selectedYear) {$('yearSelect').value = selectedYear;}
  renderMonthTabs();
  renderWeekDays();
  renderTasks();
@@ -479,15 +531,15 @@ function renderSubjectStats(){
 
 function renderRewards(){
  $('rewardsList').innerHTML=state.rewards.length?state.rewards.map(r=>{
-   let rDesc = r.desc ? r.desc : 'Phần thưởng nhỏ';
-   let isDisabled = earnedPoints() < Number(r.cost) ? 'disabled style="opacity:.5;cursor:not-allowed"' : '';
-   
-   let rewardActions = isAdminUnlocked ? `
-     <button class="icon-btn" data-edit-reward="${r.id}">✏️</button>
-     <button class="icon-btn" data-delete-reward="${r.id}">🗑️</button>
-   ` : '';
+    let rDesc = r.desc ? r.desc : 'Phần thưởng nhỏ';
+    let isDisabled = earnedPoints() < Number(r.cost) ? 'disabled style="opacity:.5;cursor:not-allowed"' : '';
+    
+    let rewardActions = isAdminUnlocked ? `
+      <button class="icon-btn" data-edit-reward="${r.id}">✏️</button>
+      <button class="icon-btn" data-delete-reward="${r.id}">🗑️</button>
+    ` : '';
 
-   return `<div class="reward-card">
+    return `<div class="reward-card">
      <div class="row-between"><h3>🎁 ${escapeHTML(r.name)}</h3><span class="points">${Number(r.cost)} ⭐</span></div>
      <p>${escapeHTML(rDesc)}</p>
      <div class="flex">
@@ -569,7 +621,6 @@ function downloadFile(name,content,type='application/json'){
 
 function exportData(){
   downloadFile(`goc-hoc-tap-${todayISO()}.json`,JSON.stringify(state,null,2));
-  toast('Đã tạo bản sao dữ liệu.');
 }
 
 function weeklyReport(){
@@ -579,11 +630,9 @@ function weeklyReport(){
  $('reportDialog').showModal();
 }
 
-// Đồng bộ tự động ngầm với Google Sheets (Đã khắc phục lỗi ngày tháng hiển thị undefined)
 async function syncFromGAS() {
   const url = "https://script.google.com/macros/s/AKfycbzAoMc2wRYBvra-1OkSpXI0P-EJ9ZkO9Op4yLuV7WFXCNzo_mBIdE1yOmxPjA0Kuurc4w/exec";
   try {
-    toast('Đang đồng bộ dữ liệu...');
     const response = await fetch(url, { redirect: 'follow' });
     const result = await response.json();
     if (Array.isArray(result)) {
@@ -593,7 +642,6 @@ async function syncFromGAS() {
         let parseDate = (dStr) => {
           if (!dStr) return todayISO();
           let str = String(dStr);
-          // Nếu nhận chuỗi định dạng dài kiểu "Tue Oct 13 2026..."
           if (str.includes("GMT") || str.includes("Oct") || str.includes("Jan") || str.includes("Feb") || str.includes("Mar") || str.includes("Apr") || str.includes("May") || str.includes("Jun") || str.includes("Jul") || str.includes("Aug") || str.includes("Sep") || str.includes("Nov") || str.includes("Dec")) {
             let dObj = new Date(str);
             if (!isNaN(dObj.getTime())) {
@@ -603,7 +651,6 @@ async function syncFromGAS() {
               return `${y}-${m}-${d}`;
             }
           }
-          // Nếu định dạng dd/mm/yyyy
           if (str.includes('/')) {
             const parts = str.split('/');
             if (parts.length === 3) {
@@ -640,18 +687,14 @@ async function syncFromGAS() {
       });
       save(); 
       render(); 
-      toast('Đồng bộ thành công! 🎉');
-    } else {
-      alert('Dữ liệu trả về từ Google Sheets không hợp lệ.');
     }
-  } catch (err) { alert('Lỗi kết nối: ' + err.message); }
+  } catch (err) { console.warn('Lỗi kết nối: ' + err.message); }
 }
 
 $('btnRoleKid').addEventListener('click', () => {
   isAdminUnlocked = false;
   $('appBody').classList.remove('unlocked');
   $('btnRoleKid').classList.add('active');$('btnRoleMom').classList.remove('active');
-  toast('Đang ở chế độ Khánh Huyền.');
   render();
 });
 
@@ -662,7 +705,6 @@ $('btnRoleMom').addEventListener('click', () => {
       isAdminUnlocked = true;
       $('appBody').classList.add('unlocked');
       $('btnRoleMom').classList.add('active');$('btnRoleKid').classList.remove('active');
-      toast('Đã mở khóa mục của Mẹ thành công! 🔓');
       render();
     } else if (pwd !== null) {
       alert('Sai mật khẩu!');
@@ -695,6 +737,7 @@ $('filterSubject').addEventListener('change',e=>{filterSubject=e.target.value;re
 $('weekDays').addEventListener('click',e=>{const b=e.target.closest('[data-date]');if(!b)return;selectedDate=b.dataset.date;weekStart=mondayOf(selectedDate);selectedMonth=monthISO(selectedDate);selectedYear=selectedMonth.split('-')[0];render();});$('prevWeek').addEventListener('click',()=>{weekStart=dateAdd(weekStart,-7);selectedDate=weekStart;selectedMonth=monthISO(selectedDate);selectedYear=selectedMonth.split('-')[0];render();});
 $('nextWeek').addEventListener('click',()=>{weekStart=dateAdd(weekStart,7);selectedDate=weekStart;selectedMonth=monthISO(selectedDate);selectedYear=selectedMonth.split('-')[0];render();});$('todayBtn').addEventListener('click',()=>{selectedDate=todayISO();selectedMonth=monthISO(todayISO());selectedYear=selectedMonth.split('-')[0];weekStart=mondayOf(selectedDate);render();});
 
+// Xử lý sự kiện hoàn thành bài tập với hiệu ứng pháo hoa và bảng thông báo ở giữa màn hình
 $('taskDays').addEventListener('click',e=>{
  const toggle=e.target.closest('[data-toggle]');
  if(toggle){
@@ -703,11 +746,26 @@ $('taskDays').addEventListener('click',e=>{
    t.done=toggle.checked;
    t.completedAt=t.done?new Date().toISOString():'';
    save();render();
-   toast(t.done?`Giỏi lắm! +${Number(t.points) ? Number(t.points) : 0} điểm ⭐`:'Đã cập nhật trạng thái bài tập.');
+   
+   if (t.done) {
+     // 1. Pháo hoa bắn tung tóe
+     confetti({
+       particleCount: 150,
+       spread: 100,
+       origin: { y: 0.5 }
+     });
+
+     // 2. Hiện bảng thông báo "Giỏi lắm! +1 điểm" ở chính giữa màn hình
+     const starToast = $('star-toast');
+     starToast.innerHTML = `✨ Giỏi lắm! +${Number(t.points) ? Number(t.points) : 1} điểm ⭐ 🎉`;
+     starToast.classList.remove('show-toast');
+     void starToast.offsetWidth; // Reset animation
+     starToast.classList.add('show-toast');
+   }
    return;
  }
  const edit=e.target.closest('[data-edit-task]');if(edit){const t=state.tasks.find(x=>x.id===edit.dataset.editTask);if(t)openTask(t);return;}
- const del=e.target.closest('[data-delete-task]');if(del){const t=state.tasks.find(x=>x.id===del.dataset.deleteTask);if(t&&confirm(`Xóa bài “${t.title}”?`)){state.tasks=state.tasks.filter(x=>x.id!==t.id);save();render();toast('Đã xóa bài tập.');}return;}
+ const del=e.target.closest('[data-delete-task]');if(del){const t=state.tasks.find(x=>x.id===del.dataset.deleteTask);if(t&&confirm(`Xóa bài “${t.title}”?`)){state.tasks=state.tasks.filter(x=>x.id!==t.id);save();render();}return;}
  const add=e.target.closest('[data-add-date]');if(add)openTask(null,add.dataset.addDate);
 });
 
@@ -716,7 +774,7 @@ $('taskForm').addEventListener('submit',e=>{
  const id=$('taskId').value;
  const old=state.tasks.find(t=>t.id===id);
  const date=$('taskDate').value;
- if(!date){toast('Vui lòng chọn ngày giao bài.');return;}
+ if(!date)return;
  const t={
    id: id ? id : uid(),
    title:$('taskTitle').value.trim(),
@@ -741,7 +799,6 @@ $('taskForm').addEventListener('submit',e=>{
  save();
  $('taskDialog').close();
  render();
- toast(old?'Đã cập nhật bài tập.':'Đã giao bài mới.');
 });
 
 $('addRewardBtn').addEventListener('click',()=>openReward());
@@ -751,13 +808,12 @@ $('rewardsContainer').addEventListener('click',e=>{
  if(redeem){
    const r=state.rewards.find(x=>x.id===redeem.dataset.redeem);
    if(!r)return;
-   if(earnedPoints()<Number(r.cost)){toast('Con chưa đủ điểm để đổi phần quà này.');return;}
+   if(earnedPoints()<Number(r.cost)){alert('Con chưa đủ điểm để đổi phần quà này.');return;}
    if(confirm(`Đổi “${r.name}” với ${r.cost} điểm nhé?`)){
      state.redemptions.push({id:uid(),rewardId:r.id,name:r.name,cost:Number(r.cost),date:todayISO()});
      save();
      renderStats(); 
      renderRewards();
-     toast('Đổi quà thành công! 🎁');
    }
    return;
  }
@@ -771,13 +827,12 @@ $('rewardsContainer').addEventListener('click',e=>{
        save();
        renderStats();
        renderRewards();
-       toast('Đã hoàn tác, điểm đã được hoàn lại! ↩️');
     }
     return;
  }
 
  const edit=e.target.closest('[data-edit-reward]');if(edit){const r=state.rewards.find(x=>x.id===edit.dataset.editReward);if(r)openReward(r);return;}
- const del=e.target.closest('[data-delete-reward]');if(del){const r=state.rewards.find(x=>x.id===del.dataset.deleteReward);if(r&&confirm(`Xóa phần thưởng “${r.name}”?`)){state.rewards=state.rewards.filter(x=>x.id!==r.id);save();renderRewards();toast('Đã xóa phần thưởng.');}}
+ const del=e.target.closest('[data-delete-reward]');if(del){const r=state.rewards.find(x=>x.id===del.dataset.deleteReward);if(r&&confirm(`Xóa phần thưởng “${r.name}”?`)){state.rewards=state.rewards.filter(x=>x.id!==r.id);save();renderRewards();}}
 });
 
 $('rewardForm').addEventListener('submit',e=>{
@@ -798,7 +853,6 @@ $('rewardForm').addEventListener('submit',e=>{
  save();
  $('rewardDialog').close();
  renderRewards();
- toast(old?'Đã cập nhật phần thưởng.':'Đã thêm phần thưởng.');
 });
 
 $('editGoalBtn').addEventListener('click',()=>{$('goalInput').value=state.goal;$('goalDialog').showModal();});$('goalForm').addEventListener('submit',e=>{
@@ -808,7 +862,6 @@ $('editGoalBtn').addEventListener('click',()=>{$('goalInput').value=state.goal;$
   save();
   $('goalDialog').close();
   renderGoal();
-  toast('Đã cập nhật mục tiêu tuần.');
 });
 
 $('weeklyReportBtn').addEventListener('click',weeklyReport);$('historyFilter').addEventListener('change',renderHistory);
@@ -823,7 +876,7 @@ $('restoreInput').addEventListener('change',async e=>{
     if(!parsed||!Array.isArray(parsed.tasks)||!Array.isArray(parsed.rewards)) throw new Error('File không đúng định dạng');
     if(!confirm('Khôi phục sẽ thay thế dữ liệu hiện tại. Bạn đã có bản sao dữ liệu cũ chưa?')) return;
     state={...defaultState(),...parsed};
-    save();render();toast('Đã khôi phục dữ liệu thành công.');
+    save();render();
   }catch(err){alert('Không thể khôi phục: '+err.message);}
   finally{e.target.value='';}
 });
@@ -835,7 +888,7 @@ $('resetBtn').addEventListener('click',()=>{
     selectedYear=selectedMonth.split('-')[0];
     selectedDate=todayISO();
     weekStart=mondayOf(selectedDate);
-    render();toast('Đã khôi phục dữ liệu mẫu.');
+    render();
   }
 });
 
