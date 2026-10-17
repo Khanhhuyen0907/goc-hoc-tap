@@ -113,6 +113,7 @@ dialog::backdrop{background:#3c243055;backdrop-filter:blur(3px)}
 .modal-head h2{margin:0;font-size:19px;color:#a64e68}
 .modal-body{padding:20px 22px;max-height:75vh;overflow:auto}
 .close{border:0;background:transparent;font-size:23px;color:#a64e68}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#55434b;color:#fff;padding:12px 18px;border-radius:12px;box-shadow:var(--shadow);z-index:10;display:none;max-width:90%;text-align:center}
 
 /* KHUNG THÔNG BÁO CHÍNH GIỮA MÀN HÌNH - CỠ CHỮ THẬT TO */
 #star-toast {
@@ -633,10 +634,11 @@ function weeklyReport(){
  $('reportDialog').showModal();
 }
 
+// Hàm đồng bộ tối ưu hóa, hỗ trợ xử lý mượt mà trên môi trường web HTTPS (GitHub Pages)
 async function syncFromGAS() {
   const url = "https://script.google.com/macros/s/AKfycbzAoMc2wRYBvra-1OkSpXI0P-EJ9ZkO9Op4yLuV7WFXCNzo_mBIdE1yOmxPjA0Kuurc4w/exec";
   try {
-    const response = await fetch(url, { redirect: 'follow' });
+    const response = await fetch(url, { method: 'GET', redirect: 'follow' });
     const result = await response.json();
     if (Array.isArray(result)) {
       result.forEach(item => {
@@ -690,8 +692,14 @@ async function syncFromGAS() {
       });
       save(); 
       render(); 
+      alert('Đồng bộ Google Sheets thành công! 🎉');
+    } else {
+      alert('Dữ liệu trả về từ Google Sheets không hợp lệ.');
     }
-  } catch (err) { console.warn('Lỗi kết nối: ' + err.message); }
+  } catch (err) { 
+    console.warn('Lỗi kết nối đồng bộ: ', err); 
+    alert('Không thể kết nối tới Google Sheets. Hãy kiểm tra lại đường dẫn Apps Script hoặc quyền "Anyone".');
+  }
 }
 
 $('btnRoleKid').addEventListener('click', () => {
@@ -856,58 +864,4 @@ $('rewardForm').addEventListener('submit',e=>{
    cost:Math.max(1,Number($('rewardCost').value) ? Number($('rewardCost').value) : 1)
  };
  if(old){
-   state.rewards=state.rewards.map(x=>x.id===id?r:x);
- } else {
-   state.rewards.push(r);
- }
- save();
- $('rewardDialog').close();
- renderRewards();
-});
-
-$('editGoalBtn').addEventListener('click',()=>{$('goalInput').value=state.goal;$('goalDialog').showModal();});$('goalForm').addEventListener('submit',e=>{
-  e.preventDefault();
-  let inp = Number($('goalInput').value) ? Number($('goalInput').value) : 100;
-  state.goal=Math.min(100,Math.max(1,inp));
-  save();
-  $('goalDialog').close();
-  renderGoal();
-});
-
-$('weeklyReportBtn').addEventListener('click',weeklyReport);$('historyFilter').addEventListener('change',renderHistory);
-$('historySearch').addEventListener('input',renderHistory);$('backupBtn').addEventListener('click',exportData);
-$('exportBtn').addEventListener('click',exportData);$('syncGasBtn').addEventListener('click', syncFromGAS);
-
-$('restoreInput').addEventListener('change',async e=>{
-  const file=e.target.files?.[0];
-  if(!file)return;
-  try{
-    const parsed=JSON.parse(await file.text());
-    if(!parsed||!Array.isArray(parsed.tasks)||!Array.isArray(parsed.rewards)) throw new Error('File không đúng định dạng');
-    if(!confirm('Khôi phục sẽ thay thế dữ liệu hiện tại. Bạn đã có bản sao dữ liệu cũ chưa?')) return;
-    state={...defaultState(),...parsed};
-    save();render();
-  }catch(err){alert('Không thể khôi phục: '+err.message);}
-  finally{e.target.value='';}
-});
-
-$('resetBtn').addEventListener('click',()=>{
-  if(confirm('Khôi phục dữ liệu mẫu? Dữ liệu hiện tại sẽ bị thay thế. Nên tải bản sao trước khi tiếp tục.')){
-    state=defaultState();save();
-    selectedMonth=monthISO(todayISO());
-    selectedYear=selectedMonth.split('-')[0];
-    selectedDate=todayISO();
-    weekStart=mondayOf(selectedDate);
-    render();
-  }
-});
-
-document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>$(b.dataset.close).close()));
-document.querySelectorAll('dialog').forEach(d=>d.addEventListener('click',e=>{if(e.target===d)d.close();}));
-
-// Khởi chạy
-render();
-})();
-</script>
-</body>
-</html>
+   state.rewards=state.rewards.map(x=>x.id===
