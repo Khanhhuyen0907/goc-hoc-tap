@@ -345,8 +345,11 @@ dialog::backdrop{background:#3c243055;backdrop-filter:blur(3px)}
   <div class="modal-body" id="reportContent"></div>
 </dialog>
 
-<!-- Khung thông báo chính giữa màn hình khi hoàn thành bài học -->
+<!-- Khung thông báo giữa màn hình khi hoàn thành bài học -->
 <div id="star-toast">✨ Giỏi lắm! +1 điểm ⭐ 🎉</div>
+
+<!-- Âm thanh vỗ tay chúc mừng -->
+<audio id="applauseAudio" src="https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3" preload="auto"></audio>
 
 <script>
 (() => {
@@ -737,7 +740,7 @@ $('filterSubject').addEventListener('change',e=>{filterSubject=e.target.value;re
 $('weekDays').addEventListener('click',e=>{const b=e.target.closest('[data-date]');if(!b)return;selectedDate=b.dataset.date;weekStart=mondayOf(selectedDate);selectedMonth=monthISO(selectedDate);selectedYear=selectedMonth.split('-')[0];render();});$('prevWeek').addEventListener('click',()=>{weekStart=dateAdd(weekStart,-7);selectedDate=weekStart;selectedMonth=monthISO(selectedDate);selectedYear=selectedMonth.split('-')[0];render();});
 $('nextWeek').addEventListener('click',()=>{weekStart=dateAdd(weekStart,7);selectedDate=weekStart;selectedMonth=monthISO(selectedDate);selectedYear=selectedMonth.split('-')[0];render();});$('todayBtn').addEventListener('click',()=>{selectedDate=todayISO();selectedMonth=monthISO(todayISO());selectedYear=selectedMonth.split('-')[0];weekStart=mondayOf(selectedDate);render();});
 
-// Xử lý sự kiện hoàn thành bài tập với hiệu ứng pháo hoa và bảng thông báo ở giữa màn hình
+// Xử lý sự kiện hoàn thành bài tập (pháo hoa + thông báo giữa màn hình + âm thanh vỗ tay)
 $('taskDays').addEventListener('click',e=>{
  const toggle=e.target.closest('[data-toggle]');
  if(toggle){
@@ -755,12 +758,19 @@ $('taskDays').addEventListener('click',e=>{
        origin: { y: 0.5 }
      });
 
-     // 2. Hiện bảng thông báo "Giỏi lắm! +1 điểm" ở chính giữa màn hình
+     // 2. Hiện bảng thông báo "Giỏi lắm! +1 điểm" ở giữa màn hình
      const starToast = $('star-toast');
-     starToast.innerHTML = `✨ Giỏi lắm con gái iu! +${Number(t.points) ? Number(t.points) : 1} điểm ⭐ 🎉`;
+     starToast.innerHTML = `✨ Giỏi lắm! +${Number(t.points) ? Number(t.points) : 1} điểm ⭐ 🎉`;
      starToast.classList.remove('show-toast');
      void starToast.offsetWidth; // Reset animation
      starToast.classList.add('show-toast');
+
+     // 3. Phát âm thanh vỗ tay chúc mừng
+     const applause = $('applauseAudio');
+     if (applause) {
+       applause.currentTime = 0;
+       applause.play().catch(err => console.log("Trình duyệt chặn autoplay:", err));
+     }
    }
    return;
  }
