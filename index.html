@@ -340,8 +340,8 @@ dialog::backdrop{background:#3c243055;backdrop-filter:blur(3px)}
 <!-- Khung thông báo giữa màn hình khi hoàn thành bài học -->
 <div id="star-toast">✨ Giỏi lắm con gái iu! +1 điểm ⭐ 🎉</div>
 
-<!-- Âm thanh Chúc Mừng Chiến Thắng (đúng chuẩn từ TiengDong.com) -->
-<audio id="applauseAudio" src="https://cdn.tiengdong.com/sfx/mp3/am-thanh-chuc-mung-chien-thang-tiengdong.com.mp3" preload="auto"></audio>
+<!-- Âm thanh Ting Ting vui nhộn / Chúc Mừng -->
+<audio id="applauseAudio" src="https://assets.mixkit.co/active_storage/sfx/2872/2872-preview.mp3" preload="auto"></audio>
 
 <script>
 (() => {
@@ -744,7 +744,7 @@ $('filterSubject').addEventListener('change',e=>{filterSubject=e.target.value;re
 $('weekDays').addEventListener('click',e=>{const b=e.target.closest('[data-date]');if(!b)return;selectedDate=b.dataset.date;weekStart=mondayOf(selectedDate);selectedMonth=monthISO(selectedDate);selectedYear=selectedMonth.split('-')[0];render();});$('prevWeek').addEventListener('click',()=>{weekStart=dateAdd(weekStart,-7);selectedDate=weekStart;selectedMonth=monthISO(selectedDate);selectedYear=selectedMonth.split('-')[0];render();});
 $('nextWeek').addEventListener('click',()=>{weekStart=dateAdd(weekStart,7);selectedDate=weekStart;selectedMonth=monthISO(selectedDate);selectedYear=selectedMonth.split('-')[0];render();});$('todayBtn').addEventListener('click',()=>{selectedDate=todayISO();selectedMonth=monthISO(todayISO());selectedYear=selectedMonth.split('-')[0];weekStart=mondayOf(selectedDate);render();});
 
-// Xử lý sự kiện hoàn thành bài tập (pháo hoa, âm thanh Chúc Mừng Chiến Thắng và thông báo giữa màn hình)
+// Xử lý sự kiện hoàn thành bài tập (pháo hoa, âm thanh Ting Ting và thông báo giữa màn hình)
 $('taskDays').addEventListener('click',e=>{
  const toggle=e.target.closest('[data-toggle]');
  if(toggle){
@@ -768,7 +768,7 @@ $('taskDays').addEventListener('click',e=>{
      void starToast.offsetWidth; // Reset animation
      starToast.classList.add('show-toast');
 
-     // 3. Phát âm thanh "Chúc Mừng Chiến Thắng" chuẩn từ TiengDong.com
+     // 3. Phát âm thanh Ting Ting vui nhộn
      const applause = $('applauseAudio');
      if (applause) {
        applause.currentTime = 0;
