@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="Ngoc Anh">
+<title>Góc học tập của bé 🌸</title>
+<style>
+:root{
+  --pink:#f6a9bd;--pink-dark:#c95c78;--pink-soft:#fff0f4;--pink-tab:#ffd3df;
+  --ink:#51434a;--muted:#8a7b82;--line:#f2d7df;--paper:#fffdfd;
+  --green:#dff5ef;--green-dark:#36795f;--yellow:#fff3c9;--blue:#e3f2ff;
+  --purple:#eee7ff;--shadow:0 8px 24px rgba(195,105,133,.10);
+}
+*{box-sizing:border-box}
+body{margin:0;background:linear-gradient(180deg,#fff5f7 0,#fffafb 330px,#fff 100%);font-family:"Segoe UI",Tahoma,Arial,sans-serif;color:var(--ink);font-size:15px}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+.app{max-width:1220px;margin:0 auto;padding:24px 18px 50px}
+.hero{position:relative;overflow:hidden;background:linear-gradient(120deg,#ffe1e9,#fff0f4 55%,#f8eaff);border:1px solid #f5cbd7;border-radius:24px;padding:28px 30px;box-shadow:var(--shadow)}
+.hero:after{content:"✿";position:absolute;right:28px;top:-22px;font-size:150px;color:#f3a8bf;opacity:.22;transform:rotate(15deg)}
+.hero-top{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;position:relative;z-index:1}
+.eyebrow{font-weight:800;color:var(--pink-dark);letter-spacing:.08em;text-transform:uppercase;font-size:40px}
+h1{margin:7px 0 7px;font-size:clamp(26px,4vw,38px);line-height:1.12;color:#9f4963}
+.subtitle{color:#806c75;margin:0;max-width:660px;line-height:1.6}
+.today-pill{background:#fff9fb;border:1px solid #f4cad7;border-radius:999px;padding:10px 15px;font-weight:700;color:#a6536c;white-space:nowrap}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin:18px 0}
+.stat{background:#fff;border:1px solid var(--line);border-radius:17px;padding:16px 17px;box-shadow:var(--shadow);min-width:0}
+.stat .label{font-size:12px;color:var(--muted);font-weight:700}
+.stat .value{font-size:27px;font-weight:800;margin-top:5px;color:#a94e69}
+.stat .hint{font-size:12px;color:var(--muted);margin-top:3px}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:18px;align-items:start}
+.panel{background:#fff;border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);overflow:hidden;margin-bottom:18px}
+.panel-head{padding:17px 20px;border-bottom:1px solid #f6e0e6;display:flex;align-items:center;justify-content:space-between;gap:12px;background:linear-gradient(90deg,#fff6f8,#fff)}
+.panel-head h2{font-size:18px;margin:0;color:#a64e68}
+.panel-body{padding:18px 20px}
+.tabs{display:flex;gap:7px;overflow-x:auto;padding:12px 15px 0;background:#fff1f4;border-bottom:1px solid #f5d6df}
+.tab{border:0;background:#ffd5e0;color:#a84e68;font-weight:800;padding:13px 16px;border-radius:12px 12px 0 0;white-space:nowrap;min-width:110px;cursor:pointer;flex-shrink:0}
+.tab.active{background:#fff;color:#b34f6d;box-shadow:inset 0 3px #e97898}
+.phase{background:#e5f7f2;border-left:5px solid #4c9475;padding:14px 16px;border-radius:10px;margin:17px 20px;color:#476d5f;line-height:1.6}
+.day-card{border:1px solid #f3cbd7;border-radius:15px;margin:0 20px 16px;overflow:hidden}
+.day-head{display:flex;justify-content:space-between;gap:10px;align-items:center;background:#fff0f4;padding:13px 16px;border-bottom:1px solid #f4d7df}
+.day-head strong{color:#b65570}
+.kpi-tag{font-size:12px;color:#7e6c73;font-weight:800}
+.task-list{padding:5px 16px 12px}
+.task{display:grid;grid-template-columns:24px 86px minmax(0,1fr) auto;gap:10px;align-items:start;padding:13px 0;border-bottom:1px solid #f4edf0}
+.task:last-child{border-bottom:0}
+.task input[type=checkbox]{width:20px;height:20px;accent-color:#e76e91;cursor:pointer;margin:1px 0 0}
+.subject{display:inline-flex;align-items:center;justify-content:center;padding:5px 9px;border-radius:6px;color:#fff;font-size:12px;font-weight:800;max-width:100%;text-align:center}
+.sub-Toán{background:#e95f83}.sub-Tiếng-Việt{background:#f0ae3c}.sub-Tiếng-Anh{background:#54a9d6}.sub-Khoa-học{background:#54ad8b}.sub-Đọc-sách{background:#9174d8}.sub-Khác{background:#8b929b}
+.task-title{font-weight:700;line-height:1.4;overflow-wrap:anywhere}
+.task-detail{font-size:13px;color:var(--muted);margin-top:4px;line-height:1.45}
+.task.done .task-title,.task.done .task-detail{text-decoration:line-through;color:#a99da2}
+.task.done{opacity:.72}
+.task-actions{display:flex;gap:5px}
+.icon-btn{border:1px solid #f0d8df;background:#fff8fa;border-radius:8px;color:#a85a71;padding:6px 8px;font-size:12px}
+.empty{padding:28px;text-align:center;color:var(--muted);line-height:1.6}
+.btn{border:0;border-radius:10px;padding:10px 14px;font-weight:800;transition:.15s;text-decoration:none;display:inline-block;text-align:center}
+.btn-primary{background:#e97998;color:white;box-shadow:0 4px 10px #e979982c}
+.btn-primary:hover{background:#d96586}
+.btn-soft{background:#fff0f4;color:#a44f68;border:1px solid #f2cfda}
+.btn-green{background:#e2f5ed;color:#36795f;border:1px solid #c6e8dc}
+.btn-small{padding:7px 10px;font-size:12px}
+.flex{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.row-between{display:flex;align-items:center;justify-content:space-between;gap:10px}
+select,input[type=date],input[type=month],input[type=text],input[type=number],textarea{width:100%;border:1px solid #ecd5dd;border-radius:10px;padding:10px 11px;background:#fffdfd;color:var(--ink);outline:none}
+select:focus,input:focus,textarea:focus{border-color:#e88da7;box-shadow:0 0 0 3px #fce7ed}
+label{display:block;font-size:13px;font-weight:800;color:#806c75;margin:0 0 6px}
+.field{margin-bottom:13px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.progress{height:10px;background:#f8e6ec;border-radius:999px;overflow:hidden}
+.progress span{display:block;height:100%;background:linear-gradient(90deg,#e97898,#f6b2c6);border-radius:999px;transition:width .25s}
+.subject-progress{margin:14px 0}
+.subject-progress .row-between{font-size:13px;margin-bottom:7px}
+.reward-card{background:linear-gradient(135deg,#fff5d7,#fffaf0);border:1px solid #f3e5b4;border-radius:15px;padding:15px;margin-bottom:10px}
+.reward-card h3{margin:0 0 5px;font-size:15px;color:#97702b}
+.reward-card p{font-size:13px;color:#897957;margin:0 0 10px}
+.points{font-weight:900;color:#a46d22}
+.small-note{font-size:12px;line-height:1.5;color:var(--muted)}
+.history-row{padding:12px 0;border-bottom:1px solid #f4edf0}
+.history-row:last-child{border-bottom:0}
+.status{display:inline-block;font-size:11px;font-weight:800;border-radius:99px;padding:4px 8px}
+.status.done{background:#e1f5ec;color:#36795f}.status.pending{background:#fff0d7;color:#96691f}.status.late{background:#ffe4e8;color:#b64b63}
+.week-days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
+.week-day{border:1px solid #f1d5df;background:#fffafb;border-radius:11px;padding:10px 4px;text-align:center;cursor:pointer;min-width:0}
+.week-day.selected{background:#ffe1e9;border-color:#e77f9b;box-shadow:inset 0 0 0 1px #e77f9b}
+.week-day .dow{font-size:10px;color:var(--muted);font-weight:800}
+.week-day .num{font-size:18px;font-weight:900;color:#a94e69;margin:4px 0}
+.week-day .dots{font-size:10px;color:#7c9e8e;white-space:nowrap}
+.footer{text-align:center;color:#aa98a0;font-size:12px;margin-top:22px}
+dialog{border:0;border-radius:20px;padding:0;width:min(620px,calc(100% - 24px));box-shadow:0 20px 70px #63324640;color:var(--ink)}
+dialog::backdrop{background:#3c243055;backdrop-filter:blur(3px)}
+.modal-head{padding:18px 22px;background:#fff0f4;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+.modal-head h2{margin:0;font-size:19px;color:#a64e68}
+.modal-body{padding:20px 22px;max-height:75vh;overflow:auto}
+.close{border:0;background:transparent;font-size:23px;color:#a64e68}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#55434b;color:#fff;padding:12px 18px;border-radius:12px;box-shadow:var(--shadow);z-index:10;display:none;max-width:90%;text-align:center}
+.section-title{margin:0 0 12px;font-size:15px;color:#a64e68}
+
+/* CSS lịch sử đổi quà */
+.redeem-history { margin-top: 15px; border-top: 1px dashed #f3cbd7; padding-top: 10px; }
+.redeem-history h4 { margin: 0 0 10px; font-size: 13px; color: #a64e68; }
+.redeem-item { display: flex; justify-content: space-between; align-items: center; background: #fff8fa; padding: 8px 10px; border-radius: 8px; margin-bottom: 5px; font-size: 12px; }
+.redeem-item .info { color: #806c75; }
+.redeem-item .info strong { color: #9f4963; }
+
+/* Menu chuyển đổi Khánh Huyền và Mẹ */
+.role-switch { display: flex; background: #fff0f4; border: 1px solid #f4cad7; border-radius: 999px; padding: 3px; gap: 4px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
+.role-btn { background: transparent; border: 0; border-radius: 999px; padding: 6px 14px; font-size: 12px; font-weight: 800; color: #a6536c; cursor: pointer; transition: 0.2s; }
+.role-btn.active { background: #e97998; color: #fff; box-shadow: 0 2px 8px rgba(233,121,152,0.3); }
+
+.admin-only { display: none !important; }
+.unlocked .admin-only { display: inline-flex !important; }
+.unlocked .admin-only-block { display: block !important; }
+
+@media(max-width:850px){.layout{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.hero-top{display:block}.today-pill{display:inline-block;margin-top:14px}.task{grid-template-columns:24px 78px minmax(0,1fr)}.task-actions{grid-column:3}.task-actions .icon-btn{padding:5px 8px}}
+@media(max-width:480px){.app{padding:12px 9px 35px}.hero{padding:21px 18px}.panel-head,.panel-body{padding:14px}.phase{margin:12px}.day-card{margin:0 10px 12px}.task-list{padding:4px 10px 8px}.task{gap:7px;grid-template-columns:22px 73px minmax(0,1fr)}.stat{padding:12px}.stat .value{font-size:23px}.week-day .dow{font-size:9px}}
+</style>
+</head>
+<body id="appBody">
+<div class="app">
+  <header class="hero">
+    <div class="hero-top">
+      <div>
+        <div class="eyebrow">🌸 GÓC HỌC TẬP CỦA KHÁNH HUYỀN</div>
+        <h1>Hôm nay mình cùng cố gắng nhé!</h1>
+        <p class="subtitle">Mỗi bài học hoàn thành là một bước tiến nhỏ. Tích vào ô vuông sau khi con học xong để nhận sao và tiến gần hơn tới món quà yêu thích.</p>
+      </div>
+      <div class="flex" style="flex-direction: column; align-items: flex-end; gap: 8px;">
+        <div class="today-pill" id="todayPill">📅 Hôm nay</div>
+        <div class="role-switch">
+          <button class="role-btn active" id="btnRoleKid">👧 Khánh Huyền</button>
+          <button class="role-btn" id="btnRoleMom">👩 Mẹ</button>
+        </div>
+        <button class="btn btn-soft btn-small" id="syncGasBtn" style="font-weight: 800; box-shadow: 0 2px 6px rgba(233,121,152,0.15); margin-top: 4px;">🔄 Đồng bộ Google Sheets</button>
+      </div>
+    </div>
+  </header>
+
+  <section class="stats" aria-label="Thống kê học tập">
+    <div class="stat"><div class="label">🌷 BÀI ĐÃ HOÀN THÀNH</div><div class="value" id="statDone">0/0</div><div class="hint">Trong tháng đang xem</div></div>
+    <div class="stat"><div class="label">🎯 KPI HOÀN THÀNH</div><div class="value" id="statKpi">0%</div><div class="hint">Theo số bài đã giao</div></div>
+    <div class="stat"><div class="label">⭐ ĐIỂM THƯỞNG</div><div class="value" id="statPoints">0</div><div class="hint">Điểm có thể đổi quà</div></div>
+    <div class="stat"><div class="label">🔥 STREAK </div><div class="value" id="statStreak">0 ngày</div><div class="hint">Ngày liên tiếp có bài hoàn thành</div></div>
+  </section>
+
+  <div class="layout">
+    <main>
+      <section class="panel">
+        <div class="panel-head" style="display: flex; align-items: center; justify-content: space-between;">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <h2>🗓️ Kế hoạch học tập</h2>
+            <select id="yearSelect" style="width: 100px; padding: 6px 10px; font-weight: 700; color: #a64e68; background: #fff0f4; border: 1px solid #f4cad7; border-radius: 10px;">
+              <option value="2026">2026</option>
+              <option value="2027">2027</option>
+              <option value="2028">2028</option>
+              <option value="2029">2029</option>
+              <option value="2030">2030</option>
+            </select>
+          </div>
+          <button class="btn btn-soft btn-small" id="todayBtn">Về hôm nay</button>
+        </div>
+
+        <div class="tabs" id="monthTabs" role="tablist"></div>
+
+        <div class="panel-body" style="padding-bottom:8px">
+          <div class="form-grid" style="grid-template-columns: 1fr; margin-bottom: 8px;">
+            <div class="field"><label for="filterSubject">Lọc theo môn</label><select id="filterSubject"><option value="all">Tất cả các môn</option><option>Toán</option><option>Tiếng Việt</option><option>Tiếng Anh</option><option>Khoa học</option><option>Đọc sách</option><option>Khác</option></select></div>
+          </div>
+          <div class="row-between" style="margin:4px 0 12px">
+            <h3 class="section-title" style="margin:0">Tuần đang xem</h3>
+            <div class="flex"><button class="btn btn-soft btn-small" id="prevWeek">← Tuần trước</button><button class="btn btn-soft btn-small" id="nextWeek">Tuần sau →</button></div>
+          </div>
+          <div class="week-days" id="weekDays"></div>
+        </div>
+        <div id="phase" class="phase"></div>
+        <div id="taskDays"></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head"><h2>📚 Tổng kết theo môn</h2><span class="kpi-tag" id="subjectMonthLabel"></span></div>
+        <div class="panel-body" id="subjectStats"></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head"><h2>📖 Lịch sử học tập</h2><button class="btn btn-soft btn-small admin-only" id="exportBtn">Xuất bản sao dữ liệu</button></div>
+        <div class="panel-body">
+          <div class="form-grid">
+            <div class="field"><label for="historyFilter">Trạng thái</label><select id="historyFilter"><option value="all">Tất cả bài tập</option><option value="done">Đã hoàn thành</option><option value="pending">Chưa hoàn thành</option><option value="late">Quá hạn</option></select></div>
+            <div class="field"><label for="historySearch">Tìm bài tập</label><input id="historySearch" type="text" placeholder="Nhập tên bài..."></div>
+          </div>
+          <div id="historyList"></div>
+        </div>
+      </section>
+    </main>
+
+    <aside>
+      <section class="panel">
+        <div class="panel-head"><h2>🎁 Góc đổi quà</h2><button class="btn btn-soft btn-small admin-only" id="addRewardBtn">＋ Thêm</button></div>
+        <div class="panel-body" id="rewardsContainer">
+          <p class="small-note" style="margin-top:0">Con dùng điểm tích lũy để đổi những phần thưởng nhỏ. Mẹ có thể chỉnh số điểm và tên quà.</p>
+          <div id="rewardsList"></div>
+          
+          <div class="redeem-history">
+            <h4>🛒 Lịch sử đổi quà</h4>
+            <div id="redeemHistoryList"></div>
+          </div>
+
+          <div class="small-note" style="margin-top:15px">💡 Gợi ý: đặt mục tiêu vừa sức, khen sự cố gắng và cùng con xem lại tiến độ mỗi tuần.</div>
+        </div>
+      </section>
+      <section class="panel">
+        <div class="panel-head"><h2>🎯 Mục tiêu tuần</h2><button class="btn btn-soft btn-small admin-only" id="editGoalBtn">Sửa</button></div>
+        <div class="panel-body">
+          <div class="row-between"><span class="small-note">KPI tuần này</span><strong id="weekKpiLabel">0%</strong></div>
+          <div class="progress" style="margin:8px 0 15px"><span id="weekKpiBar" style="width:0%"></span></div>
+          <div class="row-between"><span class="small-note">Mục tiêu</span><strong id="goalLabel">100%</strong></div>
+          <p class="small-note" id="goalMessage">Từng chút một, con sẽ làm được!</p>
+          <button class="btn btn-green" style="width:100%;margin-top:8px" id="weeklyReportBtn">Xem tổng kết tuần</button>
+        </div>
+      </section>
+      <section class="panel">
+        <div class="panel-head"><h2>🌼 Thói quen tốt</h2></div>
+        <div class="panel-body small-note">
+          <p>🌸 <b>Có ghi chép:</b> Note lại từ vựng Tiếng Anh khó, quy luật dãy số vào sổ tay.</p>
+          <p>🌸 <b>Có thưởng phạt:</b> Đạt mục tiêu tuần sẽ được cộng điểm đổi quà cuối tuần.</p>
+          <p>🌸 <b>Tự giác:</b> Tích hoàn thành sau khi đã làm xong và kiểm tra bài.</p>
+        </div>
+      </section>
+      
+      <section class="panel">
+        <div class="panel-head"><h2>🛠️ Cài đặt hệ thống</h2></div>
+        <div class="panel-body">
+          <div class="admin-only admin-only-block" id="adminSettingsContent">
+            <button class="btn btn-soft" style="width:100%;margin-bottom:8px" id="backupBtn">Tải bản sao dữ liệu (.json)</button>
+            <label class="btn btn-soft" style="width:100%;text-align:center;cursor:pointer">Khôi phục dữ liệu (.json)<input id="restoreInput" type="file" accept=".json,application/json" style="display:none"></label>
+            <p class="small-note" style="margin-top:8px;">Dữ liệu được lưu trên trình duyệt này bằng localStorage.</p>
+            <button class="btn btn-soft" style="width:100%;color:#b64b63;margin-top:8px;" id="resetBtn">Khôi phục dữ liệu mẫu</button>
+          </div>
+          <div id="kidSettingsMsg" class="small-note" style="text-align:center; padding: 5px 0; color: #a6536c; font-weight: 700;">
+            🔒 Chuyển sang mục <b>Mẹ</b> (nhập pass) để dùng tính năng sao lưu & khôi phục.
+          </div>
+        </div>
+      </section>
+    </aside>
+  </div>
+  <div class="footer">🌷 Góc học tập của bé · Bản HTML chạy offline · Dữ liệu lưu trên thiết bị này</div>
+</div>
+
+<dialog id="taskDialog">
+  <div class="modal-head"><h2 id="taskDialogTitle">🌸 Giao bài tập mới</h2><button class="close" data-close="taskDialog" aria-label="Đóng">×</button></div>
+  <form id="taskForm" class="modal-body">
+    <input type="hidden" id="taskId">
+    <div class="field"><label for="taskTitle">Tên bài tập *</label><input id="taskTitle" type="text" required maxlength="180" placeholder="Ví dụ: Làm bài 3 trang 25"></div>
+    <div class="form-grid">
+      <div class="field"><label for="taskSubject">Môn học</label><select id="taskSubject"><option>Toán</option><option>Tiếng Việt</option><option>Tiếng Anh</option><option>Khoa học</option><option>Đọc sách</option><option>Khác</option></select></div>
+      <div class="field"><label for="taskDate">Ngày giao / cần làm *</label><input id="taskDate" type="date" required></div>
+    </div>
+    <div class="field"><label for="taskDetail">Hướng dẫn / tài liệu (có thể chèn link dạng http...)</label><textarea id="taskDetail" rows="3" maxlength="600" placeholder="Trang sách, số bài, đường dẫn hoặc ghi chú..."></textarea></div>
+    <div class="form-grid">
+      <div class="field"><label for="taskPoints">Điểm thưởng khi hoàn thành</label><input id="taskPoints" type="number" min="0" max="1000" value="1"></div>
+      <div class="field"><label for="taskDue">Hạn hoàn thành (nếu khác ngày giao)</label><input id="taskDue" type="date"></div>
+    </div>
+    <div class="flex" style="justify-content:flex-end;margin-top:10px"><button type="button" class="btn btn-soft" data-close="taskDialog">Hủy</button><button type="submit" class="btn btn-primary">Lưu bài tập</button></div>
+  </form>
+</dialog>
+
+<dialog id="rewardDialog">
+  <div class="modal-head"><h2 id="rewardDialogTitle">🎁 Thêm phần thưởng</h2><button class="close" data-close="rewardDialog">×</button></div>
+  <form id="rewardForm" class="modal-body">
+    <input type="hidden" id="rewardId">
+    <div class="field"><label for="rewardName">Tên phần thưởng *</label><input id="rewardName" type="text" required maxlength="100" placeholder="Ví dụ: Chọn phim cuối tuần"></div>
+    <div class="field"><label for="rewardDesc">Mô tả</label><input id="rewardDesc" type="text" maxlength="180" placeholder="Một buổi xem phim cùng gia đình"></div>
+    <div class="field"><label for="rewardCost">Số điểm cần đổi *</label><input id="rewardCost" type="number" min="1" max="100000" required value="10"></div>
+    <div class="flex" style="justify-content:flex-end"><button type="button" class="btn btn-soft" data-close="rewardDialog">Hủy</button><button class="btn btn-primary" type="submit">Lưu phần thưởng</button></div>
+  </form>
+</dialog>
+
+<dialog id="goalDialog">
+  <div class="modal-head"><h2>🎯 Mục tiêu tuần</h2><button class="close" data-close="goalDialog">×</button></div>
+  <form id="goalForm" class="modal-body">
+    <div class="field"><label for="goalInput">KPI mục tiêu (%)</label><input type="number" id="goalInput" min="1" max="100" value="100" required></div>
+    <p class="small-note">KPI được tính bằng số bài đã hoàn thành chia cho tổng số bài được giao trong tuần.</p>
+    <div class="flex" style="justify-content:flex-end"><button type="button" class="btn btn-soft" data-close="goalDialog">Hủy</button><button type="submit" class="btn btn-primary">Lưu mục tiêu</button></div>
+  </form>
+</dialog>
+
+<dialog id="reportDialog">
+  <div class="modal-head"><h2>🌟 Tổng kết tuần</h2><button class="close" data-close="reportDialog">×</button></div>
+  <div class="modal-body" id="reportContent"></div>
+</dialog>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(() => {
+'use strict';
+const STORAGE_KEY = 'gocHocTapBe_v1';
+const SUBJECTS = ['Toán','Tiếng Việt','Tiếng Anh','Khoa học','Đọc sách','Khác'];
+const $ = id => document.getElementById(id);
+const todayISO = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; };
+const base = todayISO();
+const monthISO = date => date.slice(0,7);
+const fmtDate = iso => { if(!iso) return ''; const [y,m,d]=iso.split('-').map(Number); return new Date(y,m-1,d).toLocaleDateString('vi-VN',{weekday:'long',day:'2-digit',month:'2-digit',year:'numeric'}); };
+const shortDate = iso => { if(!iso) return ''; const [y,m,d]=iso.split('-').map(Number); return `${d}/${m}`; };
+const escapeHTML = s => String(s ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+const linkifyText = text => {
+  const safe = escapeHTML(text);
+  const urlRegex = /(https?:\/\/[^\s]+)/g;
+  return safe.replace(urlRegex, url => `<a href="${url}" target="_blank" style="color: #e97998; font-weight: 700; text-decoration: underline;">${url}</a>`);
+};
+
+const uid = () => 'id_' + Date.now().toString(36) + Math.random().toString(36).slice(2,8);
+const dateAdd = (iso,n) => { const [y,m,d]=iso.split('-').map(Number); const x=new Date(y,m-1,d); x.setDate(x.getDate()+n); return `${x.getFullYear()}-${String(x.getMonth()+1).padStart(2,'0')}-${String(x.getDate()).padStart(2,'0')}`; };
+const mondayOf = iso => { const [y,m,d]=iso.split('-').map(Number); const x=new Date(y,m-1,d); const day=(x.getDay()+6)%7; x.setDate(x.getDate()-day); return `${x.getFullYear()}-${String(x.getMonth()+1).padStart(2,'0')}-${String(x.getDate()).padStart(2,'0')}`; };
+
+const sampleTasks = () => [
+ {id:uid(),title:'Trình bày lại 3 câu toán nâng cao',subject:'Toán',date:base,due:'',detail:'Làm lại vở tự luyện.',points:2,done:true,completedAt:'2026-07-01T18:00:00'},
+ {id:uid(),title:'Đọc sách tiếng Anh 15 phút',subject:'Tiếng Anh',date:dateAdd(base,1),due:'',detail:'Ghi lại 5 từ mới.',points:1,done:false}
+];
+
+const sampleRewards = () => [
+ {id:uid(),name:'Chọn phim xem cùng gia đình',desc:'Cuối tuần',cost:10}
+];
+
+function defaultState(){return {tasks:sampleTasks(),rewards:sampleRewards(),redemptions:[],goal:100,bonusWeeks:[],createdAt:new Date().toISOString()};}
+
+function loadState(){
+ try{const raw=localStorage.getItem(STORAGE_KEY);if(raw){const s=JSON.parse(raw);if(s&&Array.isArray(s.tasks))return {...defaultState(),...s};}}
+ catch(e){console.warn('Lỗi đọc dữ liệu',e);}
+ return defaultState();
+}
+
+let state=loadState();
+
+let selectedDate = todayISO();
+let selectedMonth = monthISO(selectedDate);
+let weekStart = mondayOf(selectedDate);
+let selectedYear = selectedMonth.split('-')[0] ? selectedMonth.split('-')[0] : '2026';
+let filterSubject='all';
+let isAdminUnlocked = false;
+
+function save(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}catch(e){toast('Lỗi lưu dữ liệu.');}}
+function toast(msg){const t=$('toast');t.textContent=msg;t.style.display='block';clearTimeout(toast.timer);toast.timer=setTimeout(()=>t.style.display='none',2600);}
+function subjectClass(s){return 'sub-'+s.replaceAll(' ','-');}
+function tasksForMonth(){return state.tasks.filter(t=>monthISO(t.date)===selectedMonth);}
+function weekTasks(start=weekStart){const end=dateAdd(start,6);return state.tasks.filter(t=>t.date>=start&&t.date<=end);}
+function pct(done,total){return total?Math.round(done/total*100):0;}
+function doneCount(tasks){return tasks.filter(t=>t.done).length;}
+
+function earnedPoints(){
+  const taskPoints = state.tasks.reduce((sum,t) => sum + (t.done ? (Number(t.points) ? Number(t.points) : 0) : 0), 0);
+  const spentPoints = state.redemptions.reduce((s,r) => s + (Number(r.cost) ? Number(r.cost) : 0), 0);
+  return taskPoints - spentPoints;
+}
+
+function render(){
+ $('todayPill').textContent='📅 '+new Date().toLocaleDateString('vi-VN',{weekday:'long',day:'2-digit',month:'long'});
+ if($('yearSelect').value !== selectedYear) {$('yearSelect').value = selectedYear;
+ }
+ renderMonthTabs();
+ renderWeekDays();
+ renderTasks();
+ renderStats();
+ renderSubjectStats();
+ renderRewards();
+ renderGoal();
+ renderHistory();
+
+ if (isAdminUnlocked) {
+   if($('kidSettingsMsg'))$('kidSettingsMsg').style.display = 'none';
+ } else {
+   if($('kidSettingsMsg'))$('kidSettingsMsg').style.display = 'block';
+ }
+}
+
+function renderMonthTabs(){
+ let html = '';
+ for(let i=1; i<=12; i++){
+   let mon = `${selectedYear}-${String(i).padStart(2,'0')}`;
+   let act = (mon === selectedMonth) ? 'active' : '';
+   html += `<button class="tab ${act}" data-month="${mon}" role="tab">Tháng ${i}</button>`;
+ }
+ $('monthTabs').innerHTML = html;
+}
+
+function renderWeekDays(){
+ const names=['T2','T3','T4','T5','T6','T7','CN'];
+ $('weekDays').innerHTML=Array.from({length:7},(_,i)=>{const d=dateAdd(weekStart,i),ts=state.tasks.filter(t=>t.date===d),done=doneCount(ts);
+   let isSel = (d===selectedDate) ? 'selected' : '';
+   let dots = ts.length ? `${done}/${ts.length} ✓` : '—';
+   return `<button class="week-day ${isSel}" data-date="${d}"><div class="dow">${names[i]}</div><div class="num">${Number(d.slice(-2))}</div><div class="dots">${dots}</div></button>`;
+ }).join('');
+}
+
+function renderTasks(){
+ const monthTasks=tasksForMonth().filter(t=> filterSubject==='all' ? true : t.subject===filterSubject);
+ const y = Number(selectedMonth.split('-')[0]);
+ const m = Number(selectedMonth.split('-')[1]);
+ 
+ $('phase').innerHTML=`<b>Giai đoạn học tập (Tháng ${m}/${y}):</b> ${escapeHTML(phaseForMonth(m))}`;
+ 
+ let days = [selectedDate];
+ 
+ $('taskDays').innerHTML=days.map(day=>{
+  const ts=monthTasks.filter(t=>t.date===day).sort((a,b)=>(a.subject ? a.subject : '').localeCompare(b.subject ? b.subject : ''));
+  const dDone=doneCount(ts), kpi=pct(dDone,ts.length);
+  
+  const cards=ts.length ? ts.map(t=>{
+    let isDone = t.done ? 'done' : '';
+    let isChecked = t.done ? 'checked' : '';
+    let pnts = Number(t.points) ? Number(t.points) : 0;
+    let detailHtml = t.detail ? `<div class="task-detail">${linkifyText(t.detail)}</div>` : '';
+    let completedHtml = (t.done && t.completedAt) ? `<div class="task-detail">✓ Xong lúc ${new Date(t.completedAt).toLocaleString('vi-VN',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})}</div>` : '';
+    
+    let actionsHtml = isAdminUnlocked ? `
+      <div class="task-actions">
+        <button class="icon-btn" data-edit-task="${t.id}">✏️</button>
+        <button class="icon-btn" data-delete-task="${t.id}">🗑️</button>
+      </div>` : '';
+
+    return `<div class="task ${isDone}">
+     <input type="checkbox" aria-label="Đánh dấu" data-toggle="${t.id}" ${isChecked}>
+     <span class="subject ${subjectClass(t.subject)}">${escapeHTML(t.subject)}</span>
+     <div>
+       <div class="task-title">${escapeHTML(t.title)} <span style="font-size:12px; color:#a46d22; font-weight:700;">(+${pnts}⭐)</span></div>
+       ${detailHtml}
+       ${completedHtml}
+     </div>
+     ${actionsHtml}
+    </div>`;
+  }).join('') : '<div class="empty">Chưa có bài nào.</div>';
+  
+  let addBtnHtml = isAdminUnlocked ? `
+    <div class="flex" style="justify-content:flex-end;padding-top:8px">
+      <button class="btn btn-soft btn-small" data-add-date="${day}">＋ Giao bài ngày này</button>
+    </div>` : '';
+
+  return `<article class="day-card">
+    <div class="day-head">
+      <strong>🗓️ ${escapeHTML(fmtDate(day))}</strong>
+      <span class="kpi-tag">KPI ngày: ${kpi}% · ${dDone}/${ts.length} bài</span>
+    </div>
+    <div class="task-list">
+      ${cards}
+      ${addBtnHtml}
+    </div>
+  </article>`;
+ }).join('');
+}
+
+function phaseForMonth(m){
+ const p=['','Khởi động đầu năm','Củng cố nền tảng','Tăng cường thực hành','Học qua khám phá','Ôn tập hệ thống','Giai đoạn hè tự học','Khởi động năm học','Tạo đà tiến bộ','Ổn định nhịp học','Học chắc từng bước','Mở rộng kiến thức','Tổng kết năm học'];
+ return p[m] ? p[m] : p[7];
+}
+
+function renderStats(){
+ const ts=tasksForMonth(),done=doneCount(ts);
+ $('statDone').textContent=`${done}/${ts.length}`;
+ $('statKpi').textContent=pct(done,ts.length)+'%';
+ $('statPoints').textContent=earnedPoints();$('statStreak').textContent=streak()+' ngày';
+}
+
+function streak(){
+ const doneDates=new Set(state.tasks.filter(t=>t.done).map(t=>t.date));let d=todayISO(),n=0;
+ if(!doneDates.has(d)){ d=dateAdd(d,-1); }
+ while(doneDates.has(d) && n<365){n++; d=dateAdd(d,-1);}
+ return n;
+}
+
+function renderSubjectStats(){
+ $('subjectMonthLabel').textContent=selectedMonth.split('-').reverse().join('/');
+ const ts=tasksForMonth();
+ $('subjectStats').innerHTML=SUBJECTS.map(s=>{const list=ts.filter(t=>t.subject===s),d=doneCount(list),p=pct(d,list.length);return `<div class="subject-progress"><div class="row-between"><span><b>${escapeHTML(s)}</b> <span class="small-note">(${d}/${list.length} bài)</span></span><strong>${p}%</strong></div><div class="progress"><span style="width:${p}%"></span></div></div>`}).join('');
+}
+
+function renderRewards(){
+ $('rewardsList').innerHTML=state.rewards.length?state.rewards.map(r=>{
+   let rDesc = r.desc ? r.desc : 'Phần thưởng nhỏ';
+   let isDisabled = earnedPoints() < Number(r.cost) ? 'disabled style="opacity:.5;cursor:not-allowed"' : '';
+   
+   let rewardActions = isAdminUnlocked ? `
+     <button class="icon-btn" data-edit-reward="${r.id}">✏️</button>
+     <button class="icon-btn" data-delete-reward="${r.id}">🗑️</button>
+   ` : '';
+
+   return `<div class="reward-card">
+     <div class="row-between"><h3>🎁 ${escapeHTML(r.name)}</h3><span class="points">${Number(r.cost)} ⭐</span></div>
+     <p>${escapeHTML(rDesc)}</p>
+     <div class="flex">
+       <button class="btn btn-primary btn-small" data-redeem="${r.id}" ${isDisabled}>Đổi quà</button>
+       ${rewardActions}
+     </div>
+   </div>`;
+ }).join('') : '<div class="empty">Chưa có phần thưởng.</div>';
+
+ if (state.redemptions && state.redemptions.length > 0) {
+    let historyHtml = state.redemptions.slice().reverse().map(redemption => {
+      return `
+        <div class="redeem-item">
+          <div class="info">
+            <strong>${escapeHTML(redemption.name)}</strong> (-${redemption.cost}⭐)
+            <br><span style="font-size:10px">${escapeHTML(shortDate(redemption.date))}</span>
+          </div>
+          <button class="icon-btn" data-undo-redeem="${redemption.id}" title="Hoàn tác để lấy lại điểm">↩️ Hủy</button>
+        </div>
+      `;
+    }).join('');
+    $('redeemHistoryList').innerHTML = historyHtml;
+  } else {
+    $('redeemHistoryList').innerHTML = '<div class="small-note" style="text-align:center">Chưa đổi quà nào.</div>';
+  }
+}
+
+function renderGoal(){
+ const ts=weekTasks(),p=pct(doneCount(ts),ts.length);
+ $('weekKpiLabel').textContent=p+'\%';$('weekKpiBar').style.width=p+'%';$('goalLabel').textContent=state.goal+'\%';$('goalMessage').textContent=p>=state.goal?'🎉 Tuyệt vời! Con đã đạt mục tiêu tuần này!':`Cố lên nhé! Còn ${Math.max(0,state.goal-p)} điểm phần trăm.`;
+}
+
+function renderHistory(){
+ const f=$('historyFilter').value, q=$('historySearch').value.trim().toLocaleLowerCase('vi');
+ let ts=[...state.tasks].sort((a,b)=>b.date.localeCompare(a.date));
+ ts=ts.filter(t=>{
+   const late = !t.done && (t.due ? t.due : t.date) < todayISO();
+   const ok = (f==='all') ? true : ((f==='done'&&t.done) ? true : ((f==='pending'&&!t.done&&!late) ? true : ((f==='late'&&late) ? true : false)));
+   let titleLower = t.title ? t.title.toLocaleLowerCase('vi') : '';
+   let detailLower = t.detail ? t.detail.toLocaleLowerCase('vi') : '';
+   let matchQ = !q ? true : (titleLower.includes(q) || detailLower.includes(q));
+   return ok && matchQ;
+ });
+ 
+ $('historyList').innerHTML=ts.length?ts.slice(0,100).map(t=>{
+   const late = !t.done && (t.due ? t.due : t.date) < todayISO();
+   const status = t.done ? '<span class="status done">Hoàn thành</span>' : (late ? '<span class="status late">Quá hạn</span>' : '<span class="status pending">Chưa xong</span>');
+   let dueText = t.due ? ' · Hạn: '+escapeHTML(shortDate(t.due)) : '';
+   return `<div class="history-row"><div class="row-between" style="align-items:flex-start"><div><b>${escapeHTML(t.title)}</b><div class="small-note">${escapeHTML(t.subject)} · Giao: ${escapeHTML(shortDate(t.date))}${dueText}</div></div>${status}</div></div>`;
+ }).join('') : '<div class="empty">Không tìm thấy bài tập.</div>';
+}
+
+function openTask(task=null,date=selectedDate){
+ $('taskForm').reset();$('taskId').value = task ? task.id : '';
+ $('taskDialogTitle').textContent = task ? '✏️ Sửa bài tập' : '🌸 Giao bài tập mới';
+ $('taskTitle').value = task ? task.title : '';
+ $('taskSubject').value = task ? task.subject : 'Toán';
+ $('taskDate').value = task ? task.date : date;
+ $('taskDetail').value = task ? task.detail : '';
+ $('taskPoints').value = task && task.points !== undefined ? task.points : 1;
+ $('taskDue').value = task ? task.due : '';
+ $('taskDialog').showModal();
+}
+
+function openReward(reward=null){
+ $('rewardForm').reset();$('rewardId').value = reward ? reward.id : '';
+ $('rewardDialogTitle').textContent = reward ? '✏️ Sửa phần thưởng' : '🎁 Thêm phần thưởng';
+ $('rewardName').value = reward ? reward.name : '';
+ $('rewardDesc').value = reward ? reward.desc : '';
+ $('rewardCost').value = reward && reward.cost !== undefined ? reward.cost : 10;
+ $('rewardDialog').showModal();
+}
+
+function downloadFile(name,content,type='application/json'){
+ const blob=new Blob([content],{type}),url=URL.createObjectURL(blob),a=document.createElement('a');
+ a.href=url; a.download=name; document.body.appendChild(a); a.click(); a.remove();
+ setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+
+function exportData(){
+  downloadFile(`goc-hoc-tap-${todayISO()}.json`,JSON.stringify(state,null,2));
+  toast('Đã tạo bản sao dữ liệu.');
+}
+
+function weeklyReport(){
+ const ts=weekTasks(),done=doneCount(ts),p=pct(done,ts.length),start=weekStart,end=dateAdd(start,6);
+ const bySubject=SUBJECTS.map(s=>{const a=ts.filter(t=>t.subject===s);return a.length?`<li>${escapeHTML(s)}: ${doneCount(a)}/${a.length} bài</li>`:''}).join('');
+ $('reportContent').innerHTML=`<p><b>Thời gian:</b> ${escapeHTML(shortDate(start))} – ${escapeHTML(shortDate(end))}</p><div class="stat" style="margin:12px 0"><div class="label">KPI TUẦN</div><div class="value">${p}%</div><div class="progress"><span style="width:${p}%"></span></div><div class="hint">${done}/${ts.length} bài đã hoàn thành · Mục tiêu ${state.goal}%</div></div><h3 class="section-title">Theo từng môn</h3><ul>${bySubject ? bySubject : '<li>Chưa có bài tập trong tuần này.</li>'}</ul><p>${p>=state.goal?'🌟 Con đã đạt mục tiêu!':'🌱 Cố gắng tuần sau nhé!'}</p><p class="small-note">Điểm hiện có: ${earnedPoints()} ⭐.</p>`;
+ $('reportDialog').showModal();
+}
+
+// Đồng bộ tự động ngầm với Google Sheets (Đã khắc phục lỗi ngày tháng hiển thị undefined)
+async function syncFromGAS() {
+  const url = "https://script.google.com/macros/s/AKfycbzAoMc2wRYBvra-1OkSpXI0P-EJ9ZkO9Op4yLuV7WFXCNzo_mBIdE1yOmxPjA0Kuurc4w/exec";
+  try {
+    toast('Đang đồng bộ dữ liệu...');
+    const response = await fetch(url, { redirect: 'follow' });
+    const result = await response.json();
+    if (Array.isArray(result)) {
+      result.forEach(item => {
+        if (!item.taskId) return;
+        
+        let parseDate = (dStr) => {
+          if (!dStr) return todayISO();
+          let str = String(dStr);
+          // Nếu nhận chuỗi định dạng dài kiểu "Tue Oct 13 2026..."
+          if (str.includes("GMT") || str.includes("Oct") || str.includes("Jan") || str.includes("Feb") || str.includes("Mar") || str.includes("Apr") || str.includes("May") || str.includes("Jun") || str.includes("Jul") || str.includes("Aug") || str.includes("Sep") || str.includes("Nov") || str.includes("Dec")) {
+            let dObj = new Date(str);
+            if (!isNaN(dObj.getTime())) {
+              let y = dObj.getFullYear();
+              let m = String(dObj.getMonth() + 1).padStart(2, '0');
+              let d = String(dObj.getDate()).padStart(2, '0');
+              return `${y}-${m}-${d}`;
+            }
+          }
+          // Nếu định dạng dd/mm/yyyy
+          if (str.includes('/')) {
+            const parts = str.split('/');
+            if (parts.length === 3) {
+              return `${parts[2]}-${parts[1].padStart(2,'0')}-${parts[0].padStart(2,'0')}`;
+            }
+          }
+          return str;
+        };
+
+        const formattedDate = parseDate(item.date);
+        const formattedDue = item.due ? parseDate(item.due) : '';
+
+        const existing = state.tasks.find(t => t.id === item.taskId);
+        if (existing) {
+          existing.title = item.title !== undefined ? item.title : existing.title;
+          existing.subject = item.subject !== undefined ? item.subject : existing.subject;
+          existing.date = formattedDate;
+          existing.due = formattedDue;
+          existing.detail = item.detail !== undefined ? item.detail : existing.detail;
+          existing.points = item.points !== undefined ? Number(item.points) : existing.points;
+        } else {
+          state.tasks.push({
+            id: item.taskId,
+            title: item.title || 'Bài tập mới',
+            subject: item.subject || 'Toán',
+            date: formattedDate,
+            due: formattedDue,
+            detail: item.detail || '',
+            points: Number(item.points) || 1,
+            done: false,
+            completedAt: ''
+          });
+        }
+      });
+      save(); 
+      render(); 
+      toast('Đồng bộ thành công! 🎉');
+    } else {
+      alert('Dữ liệu trả về từ Google Sheets không hợp lệ.');
+    }
+  } catch (err) { alert('Lỗi kết nối: ' + err.message); }
+}
+
+$('btnRoleKid').addEventListener('click', () => {
+  isAdminUnlocked = false;
+  $('appBody').classList.remove('unlocked');
+  $('btnRoleKid').classList.add('active');$('btnRoleMom').classList.remove('active');
+  toast('Đang ở chế độ Khánh Huyền.');
+  render();
+});
+
+$('btnRoleMom').addEventListener('click', () => {
+  if (!isAdminUnlocked) {
+    const pwd = prompt("Nhập mật khẩu của Mẹ để mở khóa:");
+    if (pwd === "2017") {
+      isAdminUnlocked = true;
+      $('appBody').classList.add('unlocked');
+      $('btnRoleMom').classList.add('active');$('btnRoleKid').classList.remove('active');
+      toast('Đã mở khóa mục của Mẹ thành công! 🔓');
+      render();
+    } else if (pwd !== null) {
+      alert('Sai mật khẩu!');
+    }
+  } else {
+    $('btnRoleMom').classList.add('active');$('btnRoleKid').classList.remove('active');
+  }
+});
+
+document.addEventListener('click', e => {
+  const tab = e.target.closest('[data-month]');
+  if(tab) {
+    selectedMonth = tab.dataset.month;
+    selectedDate = selectedMonth === monthISO(selectedDate) ? selectedDate : selectedMonth + '-01';
+    weekStart = mondayOf(selectedDate);
+    render();
+  }
+});
+
+$('yearSelect').addEventListener('change', e => {
+  selectedYear = e.target.value;
+  let mm = selectedMonth.split('-')[1] ? selectedMonth.split('-')[1] : '01';
+  selectedMonth = `${selectedYear}-${mm}`;
+  selectedDate = `${selectedMonth}-01`;
+  weekStart = mondayOf(selectedDate);
+  render();
+});
+
+$('filterSubject').addEventListener('change',e=>{filterSubject=e.target.value;renderTasks();});
+$('weekDays').addEventListener('click',e=>{const b=e.target.closest('[data-date]');if(!b)return;selectedDate=b.dataset.date;weekStart=mondayOf(selectedDate);selectedMonth=monthISO(selectedDate);selectedYear=selectedMonth.split('-')[0];render();});$('prevWeek').addEventListener('click',()=>{weekStart=dateAdd(weekStart,-7);selectedDate=weekStart;selectedMonth=monthISO(selectedDate);selectedYear=selectedMonth.split('-')[0];render();});
+$('nextWeek').addEventListener('click',()=>{weekStart=dateAdd(weekStart,7);selectedDate=weekStart;selectedMonth=monthISO(selectedDate);selectedYear=selectedMonth.split('-')[0];render();});$('todayBtn').addEventListener('click',()=>{selectedDate=todayISO();selectedMonth=monthISO(todayISO());selectedYear=selectedMonth.split('-')[0];weekStart=mondayOf(selectedDate);render();});
+
+$('taskDays').addEventListener('click',e=>{
+ const toggle=e.target.closest('[data-toggle]');
+ if(toggle){
+   const t=state.tasks.find(x=>x.id===toggle.dataset.toggle);
+   if(!t)return;
+   t.done=toggle.checked;
+   t.completedAt=t.done?new Date().toISOString():'';
+   save();render();
+   toast(t.done?`Giỏi lắm! +${Number(t.points) ? Number(t.points) : 0} điểm ⭐`:'Đã cập nhật trạng thái bài tập.');
+   return;
+ }
+ const edit=e.target.closest('[data-edit-task]');if(edit){const t=state.tasks.find(x=>x.id===edit.dataset.editTask);if(t)openTask(t);return;}
+ const del=e.target.closest('[data-delete-task]');if(del){const t=state.tasks.find(x=>x.id===del.dataset.deleteTask);if(t&&confirm(`Xóa bài “${t.title}”?`)){state.tasks=state.tasks.filter(x=>x.id!==t.id);save();render();toast('Đã xóa bài tập.');}return;}
+ const add=e.target.closest('[data-add-date]');if(add)openTask(null,add.dataset.addDate);
+});
+
+$('taskForm').addEventListener('submit',e=>{
+ e.preventDefault();
+ const id=$('taskId').value;
+ const old=state.tasks.find(t=>t.id===id);
+ const date=$('taskDate').value;
+ if(!date){toast('Vui lòng chọn ngày giao bài.');return;}
+ const t={
+   id: id ? id : uid(),
+   title:$('taskTitle').value.trim(),
+   subject:$('taskSubject').value,
+   date: date,
+   due:$('taskDue').value,
+   detail:$('taskDetail').value.trim(),
+   points:Math.max(0,Number($('taskPoints').value) ? Number($('taskPoints').value) : 0),
+   done:old ? old.done : false,
+   completedAt:old ? old.completedAt : ''
+ };
+ if(!t.title)return;
+ if(old) {
+   state.tasks=state.tasks.map(x=>x.id===id?t:x);
+ } else {
+   state.tasks.push(t);
+ }
+ selectedDate=date;
+ selectedMonth=monthISO(date);
+ selectedYear=selectedMonth.split('-')[0];
+ weekStart=mondayOf(date);
+ save();
+ $('taskDialog').close();
+ render();
+ toast(old?'Đã cập nhật bài tập.':'Đã giao bài mới.');
+});
+
+$('addRewardBtn').addEventListener('click',()=>openReward());
+
+$('rewardsContainer').addEventListener('click',e=>{
+ const redeem=e.target.closest('[data-redeem]');
+ if(redeem){
+   const r=state.rewards.find(x=>x.id===redeem.dataset.redeem);
+   if(!r)return;
+   if(earnedPoints()<Number(r.cost)){toast('Con chưa đủ điểm để đổi phần quà này.');return;}
+   if(confirm(`Đổi “${r.name}” với ${r.cost} điểm nhé?`)){
+     state.redemptions.push({id:uid(),rewardId:r.id,name:r.name,cost:Number(r.cost),date:todayISO()});
+     save();
+     renderStats(); 
+     renderRewards();
+     toast('Đổi quà thành công! 🎁');
+   }
+   return;
+ }
+ 
+ const undoRedeem = e.target.closest('[data-undo-redeem]');
+ if (undoRedeem) {
+    const rId = undoRedeem.dataset.undoRedeem;
+    const item = state.redemptions.find(x => x.id === rId);
+    if(item && confirm(`Hoàn tác phần quà “${item.name}”? Điểm sẽ được cộng lại.`)) {
+       state.redemptions = state.redemptions.filter(x => x.id !== rId);
+       save();
+       renderStats();
+       renderRewards();
+       toast('Đã hoàn tác, điểm đã được hoàn lại! ↩️');
+    }
+    return;
+ }
+
+ const edit=e.target.closest('[data-edit-reward]');if(edit){const r=state.rewards.find(x=>x.id===edit.dataset.editReward);if(r)openReward(r);return;}
+ const del=e.target.closest('[data-delete-reward]');if(del){const r=state.rewards.find(x=>x.id===del.dataset.deleteReward);if(r&&confirm(`Xóa phần thưởng “${r.name}”?`)){state.rewards=state.rewards.filter(x=>x.id!==r.id);save();renderRewards();toast('Đã xóa phần thưởng.');}}
+});
+
+$('rewardForm').addEventListener('submit',e=>{
+ e.preventDefault();
+ const id=$('rewardId').value;
+ const old=state.rewards.find(r=>r.id===id);
+ const r={
+   id: id ? id : uid(),
+   name:$('rewardName').value.trim(),
+   desc:$('rewardDesc').value.trim(),
+   cost:Math.max(1,Number($('rewardCost').value) ? Number($('rewardCost').value) : 1)
+ };
+ if(old){
+   state.rewards=state.rewards.map(x=>x.id===id?r:x);
+ } else {
+   state.rewards.push(r);
+ }
+ save();
+ $('rewardDialog').close();
+ renderRewards();
+ toast(old?'Đã cập nhật phần thưởng.':'Đã thêm phần thưởng.');
+});
+
+$('editGoalBtn').addEventListener('click',()=>{$('goalInput').value=state.goal;$('goalDialog').showModal();});$('goalForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  let inp = Number($('goalInput').value) ? Number($('goalInput').value) : 100;
+  state.goal=Math.min(100,Math.max(1,inp));
+  save();
+  $('goalDialog').close();
+  renderGoal();
+  toast('Đã cập nhật mục tiêu tuần.');
+});
+
+$('weeklyReportBtn').addEventListener('click',weeklyReport);$('historyFilter').addEventListener('change',renderHistory);
+$('historySearch').addEventListener('input',renderHistory);$('backupBtn').addEventListener('click',exportData);
+$('exportBtn').addEventListener('click',exportData);$('syncGasBtn').addEventListener('click', syncFromGAS);
+
+$('restoreInput').addEventListener('change',async e=>{
+  const file=e.target.files?.[0];
+  if(!file)return;
+  try{
+    const parsed=JSON.parse(await file.text());
+    if(!parsed||!Array.isArray(parsed.tasks)||!Array.isArray(parsed.rewards)) throw new Error('File không đúng định dạng');
+    if(!confirm('Khôi phục sẽ thay thế dữ liệu hiện tại. Bạn đã có bản sao dữ liệu cũ chưa?')) return;
+    state={...defaultState(),...parsed};
+    save();render();toast('Đã khôi phục dữ liệu thành công.');
+  }catch(err){alert('Không thể khôi phục: '+err.message);}
+  finally{e.target.value='';}
+});
+
+$('resetBtn').addEventListener('click',()=>{
+  if(confirm('Khôi phục dữ liệu mẫu? Dữ liệu hiện tại sẽ bị thay thế. Nên tải bản sao trước khi tiếp tục.')){
+    state=defaultState();save();
+    selectedMonth=monthISO(todayISO());
+    selectedYear=selectedMonth.split('-')[0];
+    selectedDate=todayISO();
+    weekStart=mondayOf(selectedDate);
+    render();toast('Đã khôi phục dữ liệu mẫu.');
+  }
+});
+
+document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>$(b.dataset.close).close()));
+document.querySelectorAll('dialog').forEach(d=>d.addEventListener('click',e=>{if(e.target===d)d.close();}));
+
+// Khởi chạy
+render();
+})();
+</script>
+</body>
+</html>
