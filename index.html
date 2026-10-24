@@ -3,93 +3,87 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="author" content="Ngoc Anh">
-<title>Góc học tập của bé 🌸</title>
+<title>Góc học tập của Khánh Huyền 🌸</title>
 
-<!-- Nhúng Google Fonts: Dancing Script (chữ viết tay nghệ thuật) và Quicksand -->
+<!-- Fonts, Confetti & Supabase SDK -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
-
-<!-- Thư viện hiệu ứng pháo hoa (Canvas Confetti) -->
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
 :root{
   --pink:#f6a9bd;--pink-dark:#c95c78;--pink-soft:#fff0f4;--pink-tab:#ffd3df;
-  --ink:#51434a;--muted:#8a7b82;--line:#f2d7df;--paper:#fffdfd;
+  --ink:#51434a;--muted:#8a7b82;--line:#f2d7df;
   --green:#dff5ef;--green-dark:#36795f;--yellow:#fff3c9;--blue:#e3f2ff;
-  --purple:#eee7ff;--shadow:0 8px 24px rgba(195,105,133,.10);
+  --shadow:0 8px 24px rgba(195,105,133,.10);
 }
 *{box-sizing:border-box}
-body{margin:0;background:linear-gradient(180deg,#fff5f7 0,#fffafb 330px,#fff 100%);font-family:"Quicksand", "Segoe UI", Tahoma, Arial, sans-serif;color:var(--ink);font-size:15px}
+body{margin:0;background:linear-gradient(180deg,#fff5f7 0,#fffafb 330px,#fff 100%);font-family:"Quicksand", sans-serif;color:var(--ink);font-size:15px}
 button,input,select,textarea{font:inherit}
 button{cursor:pointer}
 .app{max-width:1220px;margin:0 auto;padding:24px 18px 50px}
-.hero{position:relative;overflow:hidden;background:linear-gradient(120deg,#ffe1e9,#fff0f4 55%,#f8eaff);border:1px solid #f5cbd7;border-radius:24px;padding:28px 30px;box-shadow:var(--shadow)}
-.hero:after{content:"✿";position:absolute;right:28px;top:-22px;font-size:150px;color:#f3a8bf;opacity:.22;transform:rotate(15deg)}
+.hero{position:relative;overflow:hidden;background:linear-gradient(120deg,#ffe1e9,#fff0f4 55%,#f8eaff);border:1px solid #f5cbd7;border-radius:24px;padding:26px 30px;box-shadow:var(--shadow)}
+.hero:after{content:"✿";position:absolute;right:28px;top:-22px;font-size:150px;color:#f3a8bf;opacity:.22;transform:rotate(15deg);pointer-events:none}
 .hero-top{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;position:relative;z-index:1}
-.eyebrow{font-family: 'Dancing Script', cursive, sans-serif;font-weight:700;color:var(--pink-dark);letter-spacing:.02em;text-transform:none;font-size:45px}
-h1{margin:7px 0 7px;font-size:clamp(26px,4vw,38px);line-height:1.12;color:#9f4963}
+
+.eyebrow{font-family:'Dancing Script', cursive;font-weight:700;color:var(--pink-dark);font-size:38px;line-height:1.2;margin-bottom:2px}
+h1{margin:4px 0 8px;font-size:clamp(24px,3.8vw,34px);color:#9f4963;font-weight:800;letter-spacing:-0.5px}
+
 .subtitle{color:#806c75;margin:0;max-width:660px;line-height:1.6}
-.today-pill{background:#fff9fb;border:1px solid #f4cad7;border-radius:999px;padding:10px 15px;font-weight:700;color:#a6536c;white-space:nowrap}
-.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin:18px 0}
+.today-pill{background:#fff9fb;border:1px solid #f4cad7;border-radius:999px;padding:8px 15px;font-weight:700;color:#a6536c;white-space:nowrap}
+.stats{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin:18px 0}
 .stat{background:#fff;border:1px solid var(--line);border-radius:17px;padding:16px 17px;box-shadow:var(--shadow);min-width:0}
-.stat .label{font-size:12px;color:var(--muted);font-weight:700}
-.stat .value{font-size:27px;font-weight:800;margin-top:5px;color:#a94e69}
-.stat .hint{font-size:12px;color:var(--muted);margin-top:3px}
-.layout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:18px;align-items:start}
+.stat .label{font-size:11.5px;color:var(--muted);font-weight:800}
+.stat .value{font-size:25px;font-weight:800;margin-top:5px;color:#a94e69}
+.stat .hint{font-size:11.5px;color:var(--muted);margin-top:3px}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:18px;align-items:start}
 .panel{background:#fff;border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);overflow:hidden;margin-bottom:18px}
-.panel-head{padding:17px 20px;border-bottom:1px solid #f6e0e6;display:flex;align-items:center;justify-content:space-between;gap:12px;background:linear-gradient(90deg,#fff6f8,#fff)}
-.panel-head h2{font-size:18px;margin:0;color:#a64e68}
+.panel-head{padding:16px 20px;border-bottom:1px solid #f6e0e6;display:flex;align-items:center;justify-content:space-between;gap:12px;background:linear-gradient(90deg,#fff6f8,#fff);flex-wrap:wrap;}
+.panel-head h2{font-size:17px;margin:0;color:#a64e68}
 .panel-body{padding:18px 20px}
 .tabs{display:flex;gap:7px;overflow-x:auto;padding:12px 15px 0;background:#fff1f4;border-bottom:1px solid #f5d6df}
-.tab{border:0;background:#ffd5e0;color:#a84e68;font-weight:800;padding:13px 16px;border-radius:12px 12px 0 0;white-space:nowrap;min-width:110px;cursor:pointer;flex-shrink:0}
+.tab{border:0;background:#ffd5e0;color:#a84e68;font-weight:800;padding:12px 16px;border-radius:12px 12px 0 0;white-space:nowrap;min-width:105px;cursor:pointer;flex-shrink:0}
 .tab.active{background:#fff;color:#b34f6d;box-shadow:inset 0 3px #e97898}
 .phase{background:#e5f7f2;border-left:5px solid #4c9475;padding:14px 16px;border-radius:10px;margin:17px 20px;color:#476d5f;line-height:1.6}
 .day-card{border:1px solid #f3cbd7;border-radius:15px;margin:0 20px 16px;overflow:hidden}
 .day-head{display:flex;justify-content:space-between;gap:10px;align-items:center;background:#fff0f4;padding:13px 16px;border-bottom:1px solid #f4d7df}
 .day-head strong{color:#b65570}
 .kpi-tag{font-size:12px;color:#7e6c73;font-weight:800}
-.task-list{padding:5px 16px 12px}
-.task{display:grid;grid-template-columns:24px 86px minmax(0,1fr) auto;gap:10px;align-items:start;padding:13px 0;border-bottom:1px solid #f4edf0}
+.task-list{padding:6px 16px 12px}
+.task{display:grid;grid-template-columns:86px minmax(0,1fr) auto;gap:12px;align-items:start;padding:14px 0;border-bottom:1px solid #f4edf0}
 .task:last-child{border-bottom:0}
-.task input[type=checkbox]{width:20px;height:20px;accent-color:#e76e91;cursor:pointer;margin:1px 0 0}
-.subject{display:inline-flex;align-items:center;justify-content:center;padding:5px 9px;border-radius:6px;color:#fff;font-size:12px;font-weight:800;max-width:100%;text-align:center}
+.subject{display:inline-flex;align-items:center;justify-content:center;padding:5px 9px;border-radius:8px;color:#fff;font-size:12px;font-weight:800;text-align:center}
 .sub-Toán{background:#e95f83}.sub-Tiếng-Việt{background:#f0ae3c}.sub-Tiếng-Anh{background:#54a9d6}.sub-Khoa-học{background:#54ad8b}.sub-Đọc-sách{background:#9174d8}.sub-Khác{background:#8b929b}
 .task-title{font-weight:700;line-height:1.4;overflow-wrap:anywhere}
-.task-detail{font-size:13px;color:var(--muted);margin-top:4px;line-height:1.45}
-.task.done .task-title,.task.done .task-detail{text-decoration:line-through;color:#a99da2}
-.task.done{opacity:.72}
-.task-actions{display:flex;gap:5px}
-.icon-btn{border:1px solid #f0d8df;background:#fff8fa;border-radius:8px;color:#a85a71;padding:6px 8px;font-size:12px}
+.task-detail{font-size:13px;color:var(--muted);margin-top:6px;line-height:1.5}
+.task.done{background:#fafffd}
+.task.done .task-title{color:#36795f}
+.task-actions{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.icon-btn{border:1px solid #f0d8df;background:#fff8fa;border-radius:8px;color:#a85a71;padding:6px 10px;font-size:12px;cursor:pointer}
+.icon-btn:hover{background:#ffeef3}
 .empty{padding:28px;text-align:center;color:var(--muted);line-height:1.6}
-.btn{border:0;border-radius:10px;padding:10px 14px;font-weight:800;transition:.15s;text-decoration:none;display:inline-block;text-align:center}
+.btn{border:0;border-radius:10px;padding:8px 13px;font-weight:800;transition:.15s;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:6px}
 .btn-primary{background:#e97998;color:white;box-shadow:0 4px 10px #e979982c}
 .btn-primary:hover{background:#d96586}
 .btn-soft{background:#fff0f4;color:#a44f68;border:1px solid #f2cfda}
+.btn-soft:hover{background:#fce5ec}
 .btn-green{background:#e2f5ed;color:#36795f;border:1px solid #c6e8dc}
-.btn-small{padding:7px 10px;font-size:12px}
+.btn-small{padding:5px 10px;font-size:12px;border-radius:8px}
 .flex{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .row-between{display:flex;align-items:center;justify-content:space-between;gap:10px}
-select,input[type=date],input[type=month],input[type=text],input[type=number],textarea{width:100%;border:1px solid #ecd5dd;border-radius:10px;padding:10px 11px;background:#fffdfd;color:var(--ink);outline:none}
-select:focus,input:focus,textarea:focus{border-color:#e88da7;box-shadow:0 0 0 3px #fce7ed}
+select,input[type=date],input[type=text],input[type=number],textarea{width:100%;border:1px solid #ecd5dd;border-radius:10px;padding:9px 11px;background:#fffdfd;color:var(--ink);outline:none}
 label{display:block;font-size:13px;font-weight:800;color:#806c75;margin:0 0 6px}
-.field{margin-bottom:13px}
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.field{margin-bottom:12px}
 .progress{height:10px;background:#f8e6ec;border-radius:999px;overflow:hidden}
 .progress span{display:block;height:100%;background:linear-gradient(90deg,#e97898,#f6b2c6);border-radius:999px;transition:width .25s}
 .subject-progress{margin:14px 0}
 .subject-progress .row-between{font-size:13px;margin-bottom:7px}
-.reward-card{background:linear-gradient(135deg,#fff5d7,#fffaf0);border:1px solid #f3e5b4;border-radius:15px;padding:15px;margin-bottom:10px}
-.reward-card h3{margin:0 0 5px;font-size:15px;color:#97702b}
-.reward-card p{font-size:13px;color:#897957;margin:0 0 10px}
+.reward-card{background:linear-gradient(135deg,#fff5d7,#fffaf0);border:1px solid #f3e5b4;border-radius:15px;padding:14px;margin-bottom:10px}
+.reward-card h3{margin:0 0 4px;font-size:15px;color:#97702b}
 .points{font-weight:900;color:#a46d22}
 .small-note{font-size:12px;line-height:1.5;color:var(--muted)}
-.history-row{padding:12px 0;border-bottom:1px solid #f4edf0}
-.history-row:last-child{border-bottom:0}
-.status{display:inline-block;font-size:11px;font-weight:800;border-radius:99px;padding:4px 8px}
-.status.done{background:#e1f5ec;color:#36795f}.status.pending{background:#fff0d7;color:#96691f}.status.late{background:#ffe4e8;color:#b64b63}
 .week-days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
 .week-day{border:1px solid #f1d5df;background:#fffafb;border-radius:11px;padding:10px 4px;text-align:center;cursor:pointer;min-width:0}
 .week-day.selected{background:#ffe1e9;border-color:#e77f9b;box-shadow:inset 0 0 0 1px #e77f9b}
@@ -97,67 +91,100 @@ label{display:block;font-size:13px;font-weight:800;color:#806c75;margin:0 0 6px}
 .week-day .num{font-size:18px;font-weight:900;color:#a94e69;margin:4px 0}
 .week-day .dots{font-size:10px;color:#7c9e8e;white-space:nowrap}
 .footer{text-align:center;color:#aa98a0;font-size:12px;margin-top:22px}
-dialog{border:0;border-radius:20px;padding:0;width:min(620px,calc(100% - 24px));box-shadow:0 20px 70px #63324640;color:var(--ink)}
-dialog::backdrop{background:#3c243055;backdrop-filter:blur(3px)}
-.modal-head{padding:18px 22px;background:#fff0f4;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
-.modal-head h2{margin:0;font-size:19px;color:#a64e68}
-.modal-body{padding:20px 22px;max-height:75vh;overflow:auto}
-.close{border:0;background:transparent;font-size:23px;color:#a64e68}
-.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#55434b;color:#fff;padding:12px 18px;border-radius:12px;box-shadow:var(--shadow);z-index:10;display:none;max-width:90%;text-align:center}
+dialog{border:0;border-radius:20px;padding:0;width:min(680px,calc(100% - 24px));box-shadow:0 20px 70px rgba(99,50,70,.3);color:var(--ink)}
+dialog::backdrop{background:rgba(60,36,48,.4);backdrop-filter:blur(3px)}
+.modal-head{padding:16px 20px;background:#fff0f4;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+.modal-head h2{margin:0;font-size:17px;color:#a64e68}
+.modal-body{padding:18px 20px;max-height:78vh;overflow:auto}
+.close{border:0;background:transparent;font-size:23px;color:#a64e68;cursor:pointer}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#55434b;color:#fff;padding:12px 18px;border-radius:12px;box-shadow:var(--shadow);z-index:99999;display:none;max-width:90%;text-align:center}
 
-/* KHUNG THÔNG BÁO GIỮA MÀN HÌNH */
 #star-toast {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(0);
-  background: linear-gradient(135deg, #ff758c, #ff7eb3);
-  color: white;
-  padding: 24px 48px;
-  border-radius: 24px;
-  font-weight: 900;
-  font-size: 28px;
-  text-align: center;
-  box-shadow: 0 10px 30px rgba(255, 117, 140, 0.5);
-  z-index: 9999;
-  display: none;
-  pointer-events: none;
-  border: 3px solid #fff;
+  position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0);
+  background: linear-gradient(135deg, #ff758c, #ff7eb3); color: white;
+  padding: 24px 44px; border-radius: 24px; font-weight: 900; font-size: 28px; text-align: center;
+  box-shadow: 0 10px 30px rgba(255, 117, 140, 0.5); z-index: 99999; display: none; pointer-events: none; border: 3px solid #fff;
 }
-
-.show-toast {
-  display: block !important;
-  animation: popCenter 1.8s ease forwards;
-}
-
+.show-toast { display: block !important; animation: popCenter 2s ease forwards; }
 @keyframes popCenter {
   0% { transform: translate(-50%, -50%) scale(0.3); opacity: 0; }
-  20% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
-  35% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+  20% { transform: translate(-50%, -50%) scale(1.08); opacity: 1; }
   80% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
   100% { transform: translate(-50%, -50%) scale(0.8); opacity: 0; }
 }
 
-.section-title{margin:0 0 12px;font-size:15px;color:#a64e68}
-
-/* CSS lịch sử đổi quà */
-.redeem-history { margin-top: 15px; border-top: 1px dashed #f3cbd7; padding-top: 10px; }
-.redeem-history h4 { margin: 0 0 10px; font-size: 13px; color: #a64e68; }
-.redeem-item { display: flex; justify-content: space-between; align-items: center; background: #fff8fa; padding: 8px 10px; border-radius: 8px; margin-bottom: 5px; font-size: 12px; }
-.redeem-item .info { color: #806c75; }
-.redeem-item .info strong { color: #9f4963; }
-
-/* Menu chuyển đổi Khánh Huyền và Mẹ */
-.role-switch { display: flex; background: #fff0f4; border: 1px solid #f4cad7; border-radius: 999px; padding: 3px; gap: 4px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
+.role-switch { display: flex; background: #fff0f4; border: 1px solid #f4cad7; border-radius: 999px; padding: 3px; gap: 4px; }
 .role-btn { background: transparent; border: 0; border-radius: 999px; padding: 6px 14px; font-size: 12px; font-weight: 800; color: #a6536c; cursor: pointer; transition: 0.2s; }
 .role-btn.active { background: #e97998; color: #fff; box-shadow: 0 2px 8px rgba(233,121,152,0.3); }
 
 .admin-only { display: none !important; }
 .unlocked .admin-only { display: inline-flex !important; }
-.unlocked .admin-only-block { display: block !important; }
 
-@media(max-width:850px){.layout{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.hero-top{display:block}.today-pill{display:inline-block;margin-top:14px}.task{grid-template-columns:24px 78px minmax(0,1fr)}.task-actions{grid-column:3}.task-actions .icon-btn{padding:5px 8px}}
-@media(max-width:480px){.app{padding:12px 9px 35px}.hero{padding:21px 18px}.panel-head,.panel-body{padding:14px}.phase{margin:12px}.day-card{margin:0 10px 12px}.task-list{padding:4px 10px 8px}.task{gap:7px;grid-template-columns:22px 73px minmax(0,1fr)}.stat{padding:12px}.stat .value{font-size:23px}.week-day .dow{font-size:9px}#star-toast { font-size: 20px; padding: 16px 24px; width: 90%; }}
+/* TRẠNG THÁI BÀI TẬP (CÓ THÊM TRẠNG THÁI NHẮC LÀM LẠI) */
+.badge-status { font-size: 11px; font-weight: 800; padding: 4px 8px; border-radius: 6px; display: inline-flex; align-items: center; gap: 4px; }
+.status-done { background: #e1f5ec; color: #36795f; }
+.status-pending { background: #fff3c9; color: #8a6a16; }
+.status-todo { background: #f1edf0; color: #7f6e76; }
+.status-redo { background: #ffe4e8; color: #b64b63; border: 1px solid #f6cfda; }
+
+.task-link-btn { display: inline-flex; align-items: center; gap: 4px; background: #fff0f4; color: #c95c78; border: 1px solid #f4cad7; padding: 5px 10px; border-radius: 8px; font-size: 12px; font-weight: 800; text-decoration: none; margin-top: 6px; }
+.task-link-btn:hover { background: #ffe1e9; }
+.btn-quiz { background: #fff0f4; color: #c95c78; border: 1px solid #f4cad7; border-radius: 8px; padding: 5px 12px; font-size: 12px; font-weight: 800; margin-top: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; }
+.btn-quiz:hover { background: #fce4ec; border-color: #e97998; }
+
+.quiz-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.quiz-question-row { background: #fffafb; border: 1px solid #f4cad7; border-radius: 10px; padding: 10px 12px; }
+.quiz-q-title { font-weight: 700; color: #9f4963; margin-bottom: 6px; font-size: 13px; display: flex; justify-content: space-between; }
+.quiz-result-tag { font-size: 11px; font-weight: 800; padding: 2px 6px; border-radius: 6px; }
+.res-correct { background: #e1f5ec; color: #36795f; }
+.res-wrong { background: #ffe4e8; color: #b64b63; }
+
+.history-row { padding: 11px 0; border-bottom: 1px solid #f4edf0; }
+.history-row:last-child { border-bottom: 0; }
+
+.paste-drop-zone {
+  border: 2px dashed #f4cad7;
+  background: #fff8fa;
+  border-radius: 14px;
+  padding: 18px 12px;
+  text-align: center;
+  cursor: pointer;
+  transition: 0.2s;
+  outline: none;
+}
+.paste-drop-zone:hover, .paste-drop-zone:focus {
+  border-color: #e97998;
+  background: #fff0f4;
+}
+.paste-drop-zone.dragover {
+  border-color: #e95f83;
+  background: #ffe3eb;
+}
+
+/* BẠN HỌC AI THỎ SIÊU QUẬY */
+.ai-chat-box { height: 420px; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 10px; background: #fffafb; border-radius: 12px; border: 1px solid #f3cbd7; }
+.ai-msg { max-width: 82%; padding: 10px 14px; border-radius: 16px; font-size: 13.5px; line-height: 1.5; word-break: break-word; }
+.ai-msg.bot { background: #fff0f4; border: 1px solid #f5cfdb; align-self: flex-start; color: #4a3b42; border-bottom-left-radius: 4px; }
+.ai-msg.user { background: #e97998; color: #fff; align-self: flex-end; border-bottom-right-radius: 4px; }
+.ai-msg img { max-width: 100%; border-radius: 8px; margin-top: 4px; }
+.ai-btn-circle { width: 38px; height: 38px; border-radius: 50%; border: 1px solid #f2cfda; background: #fff0f4; color: var(--pink-dark); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; }
+.ai-btn-circle.recording { background: #ff4757; color: white; animation: pulse 1s infinite; }
+@keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+
+.typing-dots span {
+  animation: blink 1.4s infinite both;
+  font-weight: 900;
+  font-size: 16px;
+}
+.typing-dots span:nth-child(2) { animation-delay: .2s; }
+.typing-dots span:nth-child(3) { animation-delay: .4s; }
+@keyframes blink {
+  0% { opacity: .2; }
+  20% { opacity: 1; }
+  100% { opacity: .2; }
+}
+
+@media(max-width:850px){.layout{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.hero-top{display:block}.today-pill{display:inline-block;margin-top:14px}.task{grid-template-columns:1fr}.task-actions{margin-top:6px}.quiz-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body id="appBody">
@@ -167,7 +194,7 @@ dialog::backdrop{background:#3c243055;backdrop-filter:blur(3px)}
       <div>
         <div class="eyebrow">🌸 Góc học tập của Khánh Huyền</div>
         <h1>Hôm nay mình cùng cố gắng nhé!</h1>
-        <p class="subtitle">Mỗi bài học hoàn thành là một bước tiến nhỏ. Tích vào ô vuông sau khi con học xong để nhận sao và tiến gần hơn tới món quà yêu thích.</p>
+        <p class="subtitle">Làm bài tập, làm phiếu trắc nghiệm nhận sao hoặc luyện nói cùng Bạn học AI để đổi quà yêu thích nhé!</p>
       </div>
       <div class="flex" style="flex-direction: column; align-items: flex-end; gap: 8px;">
         <div class="today-pill" id="todayPill">📅 Hôm nay</div>
@@ -175,46 +202,60 @@ dialog::backdrop{background:#3c243055;backdrop-filter:blur(3px)}
           <button class="role-btn active" id="btnRoleKid">👧 Khánh Huyền</button>
           <button class="role-btn" id="btnRoleMom">👩 Mẹ</button>
         </div>
+        
         <div class="flex" style="gap: 6px; margin-top: 4px;">
-          <a href="https://docs.google.com/spreadsheets/d/1INPJnlsU0saiIBP92mkRCLShU3qWZ20elD1OxRKnNVc/edit?gid=0#gid=0" target="_blank" class="btn btn-soft btn-small" style="font-weight: 800; box-shadow: 0 2px 6px rgba(233,121,152,0.15); text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">📊 Google sheet</a>
-          <button class="btn btn-soft btn-small" id="syncGasBtn" style="font-weight: 800; box-shadow: 0 2px 6px rgba(233,121,152,0.15);">🔄 Đồng bộ Google Sheets</button>
+          <a href="https://docs.google.com/spreadsheets/d/1INPJnlsU0saiIBP92mkRCLShU3qWZ20elD1OxRKnNVc/edit?gid=0#gid=0" id="linkOpenSheet" target="_blank" class="btn btn-soft btn-small" style="font-weight: 800; text-decoration: none;">📊 Google sheet</a>
+          <button class="btn btn-soft btn-small" id="btnSyncSheet" style="font-weight: 800; color:#1a73e8; border-color:#c2d7fa; background:#f0f6ff;">🔄 Đồng bộ Google Sheets</button>
+          <button class="btn btn-soft btn-small" id="btnConfigSheet" title="Đổi link Google Sheet" style="padding: 5px 9px; font-size: 13px;">⚙️</button>
+          <button class="btn btn-primary btn-small" id="btnOpenAiModal" style="font-weight: 800;">🐰 Bạn học AI Thỏ siêu quậy</button>
         </div>
       </div>
     </div>
   </header>
 
-  <section class="stats" aria-label="Thống kê học tập">
-    <div class="stat"><div class="label">🌷 BÀI ĐÃ HOÀN THÀNH</div><div class="value" id="statDone">0/0</div><div class="hint">Trong tháng đang xem</div></div>
-    <div class="stat"><div class="label">🎯 KPI HOÀN THÀNH</div><div class="value" id="statKpi">0%</div><div class="hint">Theo số bài đã giao</div></div>
-    <div class="stat"><div class="label">⭐ ĐIỂM THƯỞNG</div><div class="value" id="statPoints">0</div><div class="hint">Điểm có thể đổi quà</div></div>
-    <div class="stat"><div class="label">🔥 STREAK </div><div class="value" id="statStreak">0 ngày</div><div class="hint">Ngày liên tiếp có bài hoàn thành</div></div>
+  <section class="stats">
+    <div class="stat"><div class="label">🌷 BÀI HOÀN THÀNH</div><div class="value" id="statDone">0/0</div><div class="hint">Trong tháng đang xem</div></div>
+    <div class="stat"><div class="label">🎯 KPI HOÀN THÀNH</div><div class="value" id="statKpi">0%</div><div class="hint">Đã được Mẹ duyệt</div></div>
+    <div class="stat"><div class="label">⭐ ĐIỂM THƯỞNG</div><div class="value" id="statPoints">0</div><div class="hint">Dùng để đổi quà tặng</div></div>
+    <div class="stat"><div class="label">⏳ CHỜ MẸ DUYỆT</div><div class="value" id="statPending" style="color:#c98319;">0</div><div class="hint">Bài con đã nộp</div></div>
+    <div class="stat"><div class="label">🔥 STREAK</div><div class="value" id="statStreak">0 ngày</div><div class="hint">Ngày học liên tiếp</div></div>
   </section>
 
   <div class="layout">
     <main>
+      <!-- BẢNG KẾ HOẠCH HỌC TẬP -->
       <section class="panel">
-        <div class="panel-head" style="display: flex; align-items: center; justify-content: space-between;">
-          <div style="display: flex; align-items: center; gap: 12px;">
+        <div class="panel-head">
+          <div style="display: flex; align-items: center; gap: 10px;">
             <h2>🗓️ Kế hoạch học tập</h2>
-            <select id="yearSelect" style="width: 100px; padding: 6px 10px; font-weight: 700; color: #a64e68; background: #fff0f4; border: 1px solid #f4cad7; border-radius: 10px;">
-              <option value="2026">2026</option>
+            <select id="yearSelect" style="width: 95px; padding: 5px 8px; font-weight: 700; color: #a64e68; background: #fff0f4; border: 1px solid #f4cad7; border-radius: 10px;">
+              <option value="2026" selected>2026</option>
               <option value="2027">2027</option>
               <option value="2028">2028</option>
               <option value="2029">2029</option>
               <option value="2030">2030</option>
+              <option value="2031">2031</option>
+              <option value="2032">2032</option>
+              <option value="2033">2033</option>
+              <option value="2034">2034</option>
+              <option value="2035">2035</option>
+              <option value="2036">2036</option>
             </select>
           </div>
-          <button class="btn btn-soft btn-small" id="todayBtn">Về hôm nay</button>
+          <div class="flex">
+            <button class="btn btn-primary btn-small admin-only" id="btnMainAddTask">🌸 ＋ Giao bài mới</button>
+            <button class="btn btn-soft btn-small" id="todayBtn">Về hôm nay</button>
+          </div>
         </div>
 
-        <div class="tabs" id="monthTabs" role="tablist"></div>
+        <div class="tabs" id="monthTabs"></div>
 
         <div class="panel-body" style="padding-bottom:8px">
           <div class="form-grid" style="grid-template-columns: 1fr; margin-bottom: 8px;">
             <div class="field"><label for="filterSubject">Lọc theo môn</label><select id="filterSubject"><option value="all">Tất cả các môn</option><option>Toán</option><option>Tiếng Việt</option><option>Tiếng Anh</option><option>Khoa học</option><option>Đọc sách</option><option>Khác</option></select></div>
           </div>
           <div class="row-between" style="margin:4px 0 12px">
-            <h3 class="section-title" style="margin:0">Tuần đang xem</h3>
+            <h3 style="margin:0; font-size:15px; color:#a64e68;">Tuần đang xem</h3>
             <div class="flex"><button class="btn btn-soft btn-small" id="prevWeek">← Tuần trước</button><button class="btn btn-soft btn-small" id="nextWeek">Tuần sau →</button></div>
           </div>
           <div class="week-days" id="weekDays"></div>
@@ -223,16 +264,18 @@ dialog::backdrop{background:#3c243055;backdrop-filter:blur(3px)}
         <div id="taskDays"></div>
       </section>
 
+      <!-- TỔNG KẾT THEO MÔN -->
       <section class="panel">
         <div class="panel-head"><h2>📚 Tổng kết theo môn</h2><span class="kpi-tag" id="subjectMonthLabel"></span></div>
         <div class="panel-body" id="subjectStats"></div>
       </section>
 
+      <!-- LỊCH SỬ HỌC TẬP -->
       <section class="panel">
-        <div class="panel-head"><h2>📖 Lịch sử học tập</h2><button class="btn btn-soft btn-small admin-only" id="exportBtn">Xuất bản sao dữ liệu</button></div>
+        <div class="panel-head"><h2>📖 Lịch sử học tập</h2></div>
         <div class="panel-body">
-          <div class="form-grid">
-            <div class="field"><label for="historyFilter">Trạng thái</label><select id="historyFilter"><option value="all">Tất cả bài tập</option><option value="done">Đã hoàn thành</option><option value="pending">Chưa hoàn thành</option><option value="late">Quá hạn</option></select></div>
+          <div class="form-grid" style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:12px;">
+            <div class="field"><label for="historyFilter">Trạng thái</label><select id="historyFilter"><option value="all">Tất cả bài tập</option><option value="done">Đã hoàn thành</option><option value="pending">Chờ mẹ duyệt</option><option value="redo">Cần làm lại</option><option value="late">Quá hạn</option></select></div>
             <div class="field"><label for="historySearch">Tìm bài tập</label><input id="historySearch" type="text" placeholder="Nhập tên bài..."></div>
           </div>
           <div id="historyList"></div>
@@ -241,20 +284,20 @@ dialog::backdrop{background:#3c243055;backdrop-filter:blur(3px)}
     </main>
 
     <aside>
+      <!-- GÓC ĐỔI QUÀ -->
       <section class="panel">
         <div class="panel-head"><h2>🎁 Góc đổi quà</h2><button class="btn btn-soft btn-small admin-only" id="addRewardBtn">＋ Thêm</button></div>
-        <div class="panel-body" id="rewardsContainer">
-          <p class="small-note" style="margin-top:0">Con dùng điểm tích lũy để đổi những phần thưởng nhỏ. Mẹ có thể chỉnh số điểm và tên quà.</p>
+        <div class="panel-body">
+          <p class="small-note" style="margin-top:0">Con dùng điểm thưởng ⭐ để đổi những phần quà yêu thích nhé!</p>
           <div id="rewardsList"></div>
-          
-          <div class="redeem-history">
-            <h4>🛒 Lịch sử đổi quà</h4>
+          <div style="margin-top: 15px; border-top: 1px dashed #f3cbd7; padding-top: 10px;">
+            <h4 style="margin: 0 0 10px; font-size: 13px; color: #a64e68;">🛒 Quà con đã đổi</h4>
             <div id="redeemHistoryList"></div>
           </div>
-
-          <div class="small-note" style="margin-top:15px">💡 Gợi ý: đặt mục tiêu vừa sức, khen sự cố gắng và cùng con xem lại tiến độ mỗi tuần.</div>
         </div>
       </section>
+
+      <!-- MỤC TIÊU TUẦN -->
       <section class="panel">
         <div class="panel-head"><h2>🎯 Mục tiêu tuần</h2><button class="btn btn-soft btn-small admin-only" id="editGoalBtn">Sửa</button></div>
         <div class="panel-body">
@@ -265,656 +308,1406 @@ dialog::backdrop{background:#3c243055;backdrop-filter:blur(3px)}
           <button class="btn btn-green" style="width:100%;margin-top:8px" id="weeklyReportBtn">Xem tổng kết tuần</button>
         </div>
       </section>
-      <section class="panel">
-        <div class="panel-head"><h2>🌼 Thói quen tốt</h2></div>
-        <div class="panel-body small-note">
-          <p>🌸 <b>Có ghi chép:</b> Note lại từ vựng Tiếng Anh khó, quy luật dãy số vào sổ tay.</p>
-          <p>🌸 <b>Có thưởng phạt:</b> Đạt mục tiêu tuần sẽ được cộng điểm đổi quà cuối tuần.</p>
-          <p>🌸 <b>Tự giác:</b> Tích hoàn thành sau khi đã làm xong và kiểm tra bài.</p>
-        </div>
-      </section>
-      
-      <section class="panel">
-        <div class="panel-head"><h2>🛠️ Cài đặt hệ thống</h2></div>
-        <div class="panel-body">
-          <div class="admin-only admin-only-block" id="adminSettingsContent">
-            <button class="btn btn-soft" style="width:100%;margin-bottom:8px" id="backupBtn">Tải bản sao dữ liệu (.json)</button>
-            <label class="btn btn-soft" style="width:100%;text-align:center;cursor:pointer">Khôi phục dữ liệu (.json)<input id="restoreInput" type="file" accept=".json,application/json" style="display:none"></label>
-            <p class="small-note" style="margin-top:8px;">Dữ liệu được lưu trên trình duyệt này bằng localStorage.</p>
-            <button class="btn btn-soft" style="width:100%;color:#b64b63;margin-top:8px;" id="resetBtn">Khôi phục dữ liệu mẫu</button>
-          </div>
-          <div id="kidSettingsMsg" class="small-note" style="text-align:center; padding: 5px 0; color: #a6536c; font-weight: 700;">
-            🔒 Chuyển sang mục <b>Mẹ</b> (nhập pass) để dùng tính năng sao lưu & khôi phục.
-          </div>
-        </div>
-      </section>
     </aside>
   </div>
-  <div class="footer">🌷 Góc học tập của bé · Bản HTML chạy offline · Dữ liệu lưu trên thiết bị này</div>
+  <div class="footer">🌸 Góc học tập của Khánh Huyền · Kết nối Supabase Cloud & Google Sheets 💕</div>
 </div>
 
+<!-- ==================================================== -->
+<!-- 🐰 CỬA SỔ BẠN HỌC AI THỎ SIÊU QUẬY -->
+<!-- ==================================================== -->
+<dialog id="aiTutorDialog" style="width: min(650px, calc(100% - 20px));">
+  <div class="modal-head">
+    <h2>🐰 Bạn Học AI Thỏ Siêu Quậy 🌸</h2>
+    <div class="flex" style="gap:6px;">
+      <button class="icon-btn" id="btnResetAiChat" title="Xóa nhớ / Bắt đầu bài mới">🔄 Bài mới</button>
+      <button class="icon-btn" id="btnAiKeySettings" title="Cài đặt Gemini API Key">⚙️ Nhập Key</button>
+      <button class="close" data-close="aiTutorDialog">×</button>
+    </div>
+  </div>
+  <div class="modal-body" style="padding: 14px;">
+    <div class="ai-chat-box" id="aiChatBox">
+      <div class="ai-msg bot">🌸 Hí chào Khánh Huyền! Tớ là Thỏ Siêu Quậy nè 🐰 Hôm nay tớ với cậu cùng giải bài tập nào đây? Cậu chụp ảnh bài trong sách gửi tớ hoặc bấm Micro để nói chuyện với tớ nha! ⭐</div>
+    </div>
+    <div id="aiImgPreview" style="display:none; align-items:center; gap:8px; margin: 8px 0; background:#fff; padding:6px; border-radius:8px; border:1px solid #f4cad7;">
+      <img id="aiPreviewThumb" src="" style="height:45px; border-radius:4px;">
+      <span style="font-size:12px; color:#888;">Đã đính kèm ảnh</span>
+      <button type="button" id="aiBtnClearImg" style="border:0; background:transparent; margin-left:auto; cursor:pointer;">❌</button>
+    </div>
+    <div class="flex" style="gap: 6px; margin-top: 8px;">
+      <label class="ai-btn-circle" title="Tải ảnh bài tập / sách">
+        📷
+        <input type="file" id="aiFileInput" accept="image/*" style="display:none;">
+      </label>
+      <button type="button" class="ai-btn-circle" id="aiBtnMic" title="Nói với Thỏ">🎤</button>
+      <input type="text" id="aiTextInput" placeholder="Nói hoặc gõ với Thỏ Siêu Quậy (hoặc Ctrl + V để dán ảnh)..." style="flex:1;">
+      <button type="button" class="btn btn-primary" id="aiBtnSend">Gửi</button>
+    </div>
+  </div>
+</dialog>
+
+<!-- MODAL GIAO BÀI TẬP (MẸ) -->
 <dialog id="taskDialog">
-  <div class="modal-head"><h2 id="taskDialogTitle">🌸 Giao bài tập mới</h2><button class="close" data-close="taskDialog" aria-label="Đóng">×</button></div>
+  <div class="modal-head"><h2 id="taskDialogTitle">🌸 Giao bài tập mới</h2><button class="close" data-close="taskDialog">×</button></div>
   <form id="taskForm" class="modal-body">
     <input type="hidden" id="taskId">
-    <div class="field"><label for="taskTitle">Tên bài tập *</label><input id="taskTitle" type="text" required maxlength="180" placeholder="Ví dụ: Làm bài 3 trang 25"></div>
-    <div class="form-grid">
+    <div class="field"><label for="taskTitle">Tên bài tập *</label><input id="taskTitle" type="text" required placeholder="Ví dụ: Trang 24 Vở bài tập Toán"></div>
+    <div class="form-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
       <div class="field"><label for="taskSubject">Môn học</label><select id="taskSubject"><option>Toán</option><option>Tiếng Việt</option><option>Tiếng Anh</option><option>Khoa học</option><option>Đọc sách</option><option>Khác</option></select></div>
-      <div class="field"><label for="taskDate">Ngày giao / cần làm *</label><input id="taskDate" type="date" required></div>
+      <div class="field"><label for="taskDate">Ngày cần làm *</label><input id="taskDate" type="date" required></div>
     </div>
-    <div class="field"><label for="taskDetail">Hướng dẫn / tài liệu (có thể chèn link dạng http...)</label><textarea id="taskDetail" rows="3" maxlength="600" placeholder="Trang sách, số bài, đường dẫn hoặc ghi chú..."></textarea></div>
-    <div class="form-grid">
-      <div class="field"><label for="taskPoints">Điểm thưởng khi hoàn thành</label><input id="taskPoints" type="number" min="0" max="1000" value="1"></div>
-      <div class="field"><label for="taskDue">Hạn hoàn thành (nếu khác ngày giao)</label><input id="taskDue" type="date"></div>
+    <div class="field"><label for="taskDetail">Hướng dẫn / Đường link</label><textarea id="taskDetail" rows="2" placeholder="Dán link bài tập hoặc ghi chú..."></textarea></div>
+
+    <div class="field" style="background:#fff4f7; border:1px solid #f6cfda; padding:12px; border-radius:12px;">
+      <div class="row-between" style="margin-bottom:6px;">
+        <label for="taskQuestions" style="color:#a64e68; margin:0;">📝 Bộ đề 10 - 20 câu tự chấm (Toán / Tiếng Anh):</label>
+        <button type="button" class="btn btn-soft btn-small" id="btnGenMath10">⚡ Tạo nhanh 10 câu Toán</button>
+      </div>
+      <textarea id="taskQuestions" rows="4" placeholder="Mỗi dòng 1 câu: Câu hỏi | Đáp án&#10;Ví dụ:&#10;15 + 28 = ? | 43&#10;Quả táo tiếng Anh là gì? | apple"></textarea>
     </div>
+
+    <div class="field"><label for="taskPoints">Số sao thưởng khi hoàn thành</label><input id="taskPoints" type="number" min="1" max="100" value="1"></div>
     <div class="flex" style="justify-content:flex-end;margin-top:10px"><button type="button" class="btn btn-soft" data-close="taskDialog">Hủy</button><button type="submit" class="btn btn-primary">Lưu bài tập</button></div>
   </form>
 </dialog>
 
-<dialog id="rewardDialog">
-  <div class="modal-head"><h2 id="rewardDialogTitle">🎁 Thêm phần thưởng</h2><button class="close" data-close="rewardDialog">×</button></div>
-  <form id="rewardForm" class="modal-body">
-    <input type="hidden" id="rewardId">
-    <div class="field"><label for="rewardName">Tên phần thưởng *</label><input id="rewardName" type="text" required maxlength="100" placeholder="Ví dụ: Chọn phim cuối tuần"></div>
-    <div class="field"><label for="rewardDesc">Mô tả</label><input id="rewardDesc" type="text" maxlength="180" placeholder="Một buổi xem phim cùng gia đình"></div>
-    <div class="field"><label for="rewardCost">Số điểm cần đổi *</label><input id="rewardCost" type="number" min="1" max="100000" required value="10"></div>
-    <div class="flex" style="justify-content:flex-end"><button type="button" class="btn btn-soft" data-close="rewardDialog">Hủy</button><button class="btn btn-primary" type="submit">Lưu phần thưởng</button></div>
+<!-- MODAL BÉ LÀM PHIẾU BÀI TẬP TỰ CHẤM -->
+<dialog id="quizDialog">
+  <div class="modal-head"><h2 id="quizModalTitle">📝 Phiếu bài tập tự chấm</h2><button class="close" data-close="quizDialog">×</button></div>
+  <div class="modal-body">
+    <div class="small-note" id="quizCounterText" style="margin-bottom:10px;"></div>
+    <div id="quizContainer" class="quiz-grid"></div>
+    <div id="quizResultBox" style="display:none; margin:15px 0; padding:14px; border-radius:12px; text-align:center;"></div>
+    <div class="flex" style="justify-content:flex-end; gap:10px; margin-top:15px;">
+      <button type="button" class="btn btn-soft" data-close="quizDialog">Đóng</button>
+      <button type="button" class="btn btn-primary" id="btnSubmitQuiz">Nộp bài & Chấm điểm 🎯</button>
+    </div>
+  </div>
+</dialog>
+
+<!-- MODAL NỘP BÀI (HIỆN RÕ LỜI NHẮC LÀM LẠI CỦA MẸ NẾU CÓ) -->
+<dialog id="submitProofDialog">
+  <div class="modal-head"><h2 id="submitProofModalTitle">📝 Nộp bài tập</h2><button class="close" data-close="submitProofDialog">×</button></div>
+  <form id="submitProofForm" class="modal-body">
+    <input type="hidden" id="proofTaskId">
+    <p id="proofTaskTitle" style="font-weight:700; color:#a64e68; margin-top:0;"></p>
+    
+    <!-- KHUNG THÔNG BÁO LỜI NHẮC CỦA MẸ TRONG MODAL -->
+    <div id="proofMomAlert" style="display:none; background:#fff0f4; border-left:4px solid #e95f83; padding:10px 14px; border-radius:8px; margin-bottom:14px; color:#b64b63; font-size:13px; line-height:1.5;"></div>
+
+    <div class="field">
+      <label>1. Đính kèm bài làm / bằng chứng (Không bắt buộc)</label>
+      <div id="proofDropZone" class="paste-drop-zone" tabindex="0">
+        <div id="proofDropPrompt">
+          <div style="font-size:26px; margin-bottom:4px;">📋 📸</div>
+          <div style="font-weight:800; color:#a64e68; font-size:14px;">Bé chụp màn hình xong rồi bấm <kbd style="background:#fff; border:1px solid #e97998; border-radius:6px; padding:2px 6px; color:#c95c78;">Ctrl + V</kbd> để dán ảnh vào đây nhé!</div>
+          <div class="small-note" style="margin-top:4px;">hoặc kéo thả ảnh, hoặc <span style="text-decoration:underline; color:#e97998; font-weight:700;">bấm vào đây để chọn tệp từ máy</span></div>
+        </div>
+
+        <div id="proofImgPreview" style="display:none; text-align:center; position:relative;">
+          <img id="previewImgTag" src="" style="max-height: 180px; border-radius: 10px; border: 1px solid #f4cad7; box-shadow:0 4px 12px rgba(0,0,0,0.06);">
+          <div id="previewFileName" style="font-size:12px; color:#36795f; font-weight:800; margin-top:6px;"></div>
+          <button type="button" id="btnRemoveProof" class="btn btn-soft btn-small" style="margin-top:6px; color:#b64b63;">❌ Bỏ ảnh này</button>
+        </div>
+      </div>
+
+      <input type="file" id="proofFileInput" accept="*/*" style="display:none;">
+      <div class="small-note" style="margin-top:4px;">Chấp nhận mọi định dạng: Ảnh chụp màn hình, ảnh chụp vở, PDF, Word, File ghi âm... (Bỏ trống nếu con làm bài trực tuyến).</div>
+    </div>
+
+    <div class="field">
+      <label for="proofNote">2. Lời nhắn cho Mẹ (hoặc ghi chú kết quả làm bài)</label>
+      <input type="text" id="proofNote" placeholder="Ví dụ: Con đã làm lại và sửa đúng rồi mẹ ơi...">
+    </div>
+    <div class="flex" style="justify-content:flex-end; gap:8px;">
+      <button type="button" class="btn btn-soft" data-close="submitProofDialog">Đóng</button>
+      <button type="submit" class="btn btn-primary" id="btnUploadProof">Nộp bài ngay 🎉</button>
+    </div>
   </form>
 </dialog>
 
+<!-- MODAL DUYỆT BÀI (MẸ) -->
+<dialog id="reviewDialog">
+  <div class="modal-head"><h2>🔍 Xem bài làm của con</h2><button class="close" data-close="reviewDialog">×</button></div>
+  <div class="modal-body">
+    <h3 id="reviewTitle" style="color:#a64e68; margin-top:0;"></h3>
+    <p id="reviewNote" class="small-note"></p>
+    <div id="reviewFileContainer" style="text-align:center; margin:15px 0;"></div>
+    <div class="flex admin-only" style="justify-content:flex-end; gap:10px; margin-top:15px;">
+      <button type="button" class="btn btn-soft" id="btnRejectProof" style="color:#b64b63;">↩️ Nhắc con làm lại</button>
+      <button type="button" class="btn btn-green" id="btnApproveProof" style="font-weight:900;">✅ Duyệt & Tặng sao ⭐</button>
+    </div>
+  </div>
+</dialog>
+
+<!-- MODAL THÊM PHẦN THƯỞNG -->
+<dialog id="rewardDialog">
+  <div class="modal-head"><h2>🎁 Thêm phần thưởng mới</h2><button class="close" data-close="rewardDialog">×</button></div>
+  <form id="rewardForm" class="modal-body">
+    <div class="field"><label for="rewardName">Tên phần quà *</label><input id="rewardName" type="text" required placeholder="Ví dụ: Xem phim hoạt hình cuối tuần"></div>
+    <div class="field"><label for="rewardDesc">Mô tả quà</label><input id="rewardDesc" type="text" placeholder="Thưởng vào tối thứ 7"></div>
+    <div class="field"><label for="rewardCost">Số sao cần đổi *</label><input id="rewardCost" type="number" min="1" max="1000" value="10" required></div>
+    <div class="flex" style="justify-content:flex-end"><button type="button" class="btn btn-soft" data-close="rewardDialog">Hủy</button><button class="btn btn-primary" type="submit">Lưu quà</button></div>
+  </form>
+</dialog>
+
+<!-- MODAL MỤC TIÊU TUẦN -->
 <dialog id="goalDialog">
   <div class="modal-head"><h2>🎯 Mục tiêu tuần</h2><button class="close" data-close="goalDialog">×</button></div>
   <form id="goalForm" class="modal-body">
     <div class="field"><label for="goalInput">KPI mục tiêu (%)</label><input type="number" id="goalInput" min="1" max="100" value="100" required></div>
-    <p class="small-note">KPI được tính bằng số bài đã hoàn thành chia cho tổng số bài được giao trong tuần.</p>
     <div class="flex" style="justify-content:flex-end"><button type="button" class="btn btn-soft" data-close="goalDialog">Hủy</button><button type="submit" class="btn btn-primary">Lưu mục tiêu</button></div>
   </form>
 </dialog>
 
+<!-- MODAL BÁO CÁO TUẦN -->
 <dialog id="reportDialog">
   <div class="modal-head"><h2>🌟 Tổng kết tuần</h2><button class="close" data-close="reportDialog">×</button></div>
   <div class="modal-body" id="reportContent"></div>
 </dialog>
-<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<!-- Khung thông báo giữa màn hình khi hoàn thành bài học -->
-<div id="star-toast">✨ Giỏi lắm con gái iu! +1 điểm ⭐ 🎉</div>
-
-<!-- Âm thanh Ting Ting vui nhộn, nhẹ nhàng -->
-<audio id="applauseAudio" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3" preload="auto"></audio>
+<div class="toast" id="toast"></div>
+<div id="star-toast">✨ Giỏi lắm con gái iu! Đã nhận sao thưởng ⭐ 🎉</div>
+<audio id="applauseAudio" src="https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3" preload="auto"></audio>
 
 <script>
-(() => {
-'use strict';
-const STORAGE_KEY = 'gocHocTapBe_v1';
-const SUBJECTS = ['Toán','Tiếng Việt','Tiếng Anh','Khoa học','Đọc sách','Khác'];
-const $ = id => document.getElementById(id);
-const todayISO = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; };
-const base = todayISO();
-const monthISO = date => date.slice(0,7);
-const fmtDate = iso => { if(!iso) return ''; const [y,m,d]=iso.split('-').map(Number); return new Date(y,m-1,d).toLocaleDateString('vi-VN',{weekday:'long',day:'2-digit',month:'2-digit',year:'numeric'}); };
-const shortDate = iso => { if(!iso) return ''; const [y,m,d]=iso.split('-').map(Number); return `${d}/${m}`; };
-const escapeHTML = s => String(s ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+(function() {
+  const SUPABASE_URL = "https://izlwojprsnabfasgptus.supabase.co";
+  const SUPABASE_KEY = "sb_publishable_XW41uFPBvB35X70pFWb2mw_p9iqqko1";
+  const sb = (window.supabase && window.supabase.createClient) 
+    ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) 
+    : null;
 
-const linkifyText = text => {
-  const safe = escapeHTML(text);
-  const urlRegex = /(https?:\/\/[^\s]+)/g;
-  return safe.replace(urlRegex, url => `<a href="${url}" target="_blank" style="color: #e97998; font-weight: 700; text-decoration: underline;">${url}</a>`);
-};
+  const SUBJECTS = ['Toán','Tiếng Việt','Tiếng Anh','Khoa học','Đọc sách','Khác'];
+  const $ = id => document.getElementById(id);
+  const todayISO = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; };
+  const monthISO = date => date.slice(0,7);
+  const fmtDate = iso => { if(!iso) return ''; const [y,m,d]=iso.split('-').map(Number); return new Date(y,m-1,d).toLocaleDateString('vi-VN',{weekday:'long',day:'2-digit',month:'2-digit',year:'numeric'}); };
+  const shortDate = iso => { if(!iso) return ''; const [y,m,d]=iso.split('-').map(Number); return `${d}/${m}`; };
+  const escapeHTML = s => String(s ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const dateAdd = (iso,n) => { const [y,m,d]=iso.split('-').map(Number); const x=new Date(y,m-1,d); x.setDate(x.getDate()+n); return `${x.getFullYear()}-${String(x.getMonth()+1).padStart(2,'0')}-${String(x.getDate()).padStart(2,'0')}`; };
+  const mondayOf = iso => { const [y,m,d]=iso.split('-').map(Number); const x=new Date(y,m-1,d); const day=(x.getDay()+6)%7; x.setDate(x.getDate()-day); return `${x.getFullYear()}-${String(x.getMonth()+1).padStart(2,'0')}-${String(x.getDate()).padStart(2,'0')}`; };
 
-const uid = () => 'id_' + Date.now().toString(36) + Math.random().toString(36).slice(2,8);
-const dateAdd = (iso,n) => { const [y,m,d]=iso.split('-').map(Number); const x=new Date(y,m-1,d); x.setDate(x.getDate()+n); return `${x.getFullYear()}-${String(x.getMonth()+1).padStart(2,'0')}-${String(x.getDate()).padStart(2,'0')}`; };
-const mondayOf = iso => { const [y,m,d]=iso.split('-').map(Number); const x=new Date(y,m-1,d); const day=(x.getDay()+6)%7; x.setDate(x.getDate()-day); return `${x.getFullYear()}-${String(x.getMonth()+1).padStart(2,'0')}-${String(x.getDate()).padStart(2,'0')}`; };
+  let state = { tasks: [], submissions: [], rewards: [], redemptions: [], goal: 100 };
+  let selectedDate = todayISO();
+  let selectedMonth = monthISO(selectedDate);
+  let weekStart = mondayOf(selectedDate);
+  let selectedYear = selectedMonth.split('-')[0] || '2026';
+  let filterSubject = 'all';
+  let isAdminUnlocked = false;
+  let currentReviewTask = null;
+  let currentActiveQuizTask = null;
+  let currentProofFile = null;
+  let aiChatHistory = [];
 
-const sampleTasks = () => [
- {id:uid(),title:'Trình bày lại 3 câu toán nâng cao',subject:'Toán',date:base,due:'',detail:'Làm lại vở tự luyện.',points:2,done:true,completedAt:'2026-07-01T18:00:00'},
- {id:uid(),title:'Đọc sách tiếng Anh 15 phút',subject:'Tiếng Anh',date:dateAdd(base,1),due:'',detail:'Ghi lại 5 từ mới.',points:1,done:false}
-];
+  const DEFAULT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1INPJnlsU0saiIBP92mkRCLShU3qWZ20elD1OxRKnNVc/edit?gid=0#gid=0";
+  function getStoredSheetUrl() { return localStorage.getItem('CUSTOM_SHEET_URL') || DEFAULT_SHEET_URL; }
 
-const sampleRewards = () => [
- {id:uid(),name:'Chọn phim xem cùng gia đình',desc:'Cuối tuần',cost:10}
-];
+  function updateSheetLinkUI() {
+    const url = getStoredSheetUrl();
+    if ($('linkOpenSheet')) $('linkOpenSheet').href = url;
+  }
 
-function defaultState(){return {tasks:sampleTasks(),rewards:sampleRewards(),redemptions:[],goal:100,bonusWeeks:[],createdAt:new Date().toISOString()};}
+  function toast(msg){
+    const t=$('toast');
+    if(!t) return;
+    t.textContent=msg; t.style.display='block';
+    clearTimeout(toast.timer);
+    toast.timer=setTimeout(()=>t.style.display='none', 2800);
+  }
 
-function loadState(){
- try{const raw=localStorage.getItem(STORAGE_KEY);if(raw){const s=JSON.parse(raw);if(s&&Array.isArray(s.tasks))return {...defaultState(),...s};}}
- catch(e){console.warn('Lỗi đọc dữ liệu',e);}
- return defaultState();
-}
+  function subjectClass(s){return 'sub-'+(s||'Khác').replaceAll(' ','-');}
 
-let state=loadState();
+  function linkifyDetail(text) {
+    if (!text) return '';
+    const safe = escapeHTML(text);
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    return safe.replace(urlRegex, url => `<div><a href="${url}" target="_blank" class="task-link-btn">🔗 Mở bài tập trực tuyến</a></div>`);
+  }
 
-let selectedDate = todayISO();
-let selectedMonth = monthISO(selectedDate);
-let weekStart = mondayOf(selectedDate);
-let selectedYear = selectedMonth.split('-')[0] ? selectedMonth.split('-')[0] : '2026';
-let filterSubject='all';
-let isAdminUnlocked = false;
+  function cleanMathText(text) {
+    if (!text) return '';
+    return text
+      .replace(/\$([^\$]+)\$/g, '$1')
+      .replace(/\$\$/g, '')
+      .replace(/\$/g, '')
+      .replace(/\\times/g, 'x')
+      .replace(/\\div/g, ':')
+      .replace(/\\cdot/g, 'x')
+      .replace(/\\le(q)?/g, '≤')
+      .replace(/\\ge(q)?/g, '≥')
+      .replace(/\\neq/g, '≠')
+      .replace(/\\approx/g, '≈')
+      .replace(/\\[a-zA-Z]+/g, '')
+      .replace(/\*\*/g, '')
+      .replace(/(^|[^\w])\*([^\*]+)\*([^\w]|$)/g, '$1$2$3')
+      .trim();
+  }
 
-function save(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}catch(e){toast('Lỗi lưu dữ liệu.');}}
-function toast(msg){const t=$('toast');t.textContent=msg;t.style.display='block';clearTimeout(toast.timer);toast.timer=setTimeout(()=>t.style.display='none',2600);}
-function subjectClass(s){return 'sub-'+s.replaceAll(' ','-');}
-function tasksForMonth(){return state.tasks.filter(t=>monthISO(t.date)===selectedMonth);}
-function weekTasks(start=weekStart){const end=dateAdd(start,6);return state.tasks.filter(t=>t.date>=start&&t.date<=end);}
-function pct(done,total){return total?Math.round(done/total*100):0;}
-function doneCount(tasks){return tasks.filter(t=>t.done).length;}
+  function triggerCelebration(pts = 1) {
+    if(window.confetti) confetti({ particleCount: 150, spread: 100, origin: { y: 0.5 } });
+    const starToast = $('star-toast');
+    if(starToast) {
+      starToast.textContent = `✨ Giỏi lắm con gái iu! +${pts} sao thưởng ⭐ 🎉`;
+      starToast.classList.remove('show-toast');
+      void starToast.offsetWidth;
+      starToast.classList.add('show-toast');
+    }
+    const applause = $('applauseAudio');
+    if (applause) { applause.currentTime = 0; applause.play().catch(()=>{}); }
+  }
 
-function earnedPoints(){
-  const taskPoints = state.tasks.reduce((sum,t) => sum + (t.done ? (Number(t.points) ? Number(t.points) : 0) : 0), 0);
-  const spentPoints = state.redemptions.reduce((s,r) => s + (Number(r.cost) ? Number(r.cost) : 0), 0);
-  return taskPoints - spentPoints;
-}
+  function weekTasks(start=weekStart){
+    const end = dateAdd(start, 6);
+    return state.tasks.filter(t => t.task_date >= start && t.task_date <= end);
+  }
 
-function render(){
- $('todayPill').textContent='📅 '+new Date().toLocaleDateString('vi-VN',{weekday:'long',day:'2-digit',month:'long'});
- if($('yearSelect').value !== selectedYear) {$('yearSelect').value = selectedYear;
- }
- renderMonthTabs();
- renderWeekDays();
- renderTasks();
- renderStats();
- renderSubjectStats();
- renderRewards();
- renderGoal();
- renderHistory();
+  function streak(){
+    const approvedTaskIds = new Set(state.submissions.filter(s => s.status === 'approved').map(s => s.task_id));
+    const doneDates = new Set(state.tasks.filter(t => approvedTaskIds.has(t.id)).map(t => t.task_date));
+    let d = todayISO(), n = 0;
+    if(!doneDates.has(d)){ d = dateAdd(d, -1); }
+    while(doneDates.has(d) && n < 365){ n++; d = dateAdd(d, -1); }
+    return n;
+  }
 
- if (isAdminUnlocked) {
-   if($('kidSettingsMsg'))$('kidSettingsMsg').style.display = 'none';
- } else {
-   if($('kidSettingsMsg'))$('kidSettingsMsg').style.display = 'block';
- }
-}
+  // ========================================================
+  // 📋 XỬ LÝ DÁN ẢNH CHỤP MÀN HÌNH (CTRL + V)
+  // ========================================================
+  function setProofFile(file) {
+    if (!file) return;
+    currentProofFile = file;
+    $('proofDropPrompt').style.display = 'none';
+    $('proofImgPreview').style.display = 'block';
 
-function renderMonthTabs(){
- let html = '';
- for(let i=1; i<=12; i++){
-   let mon = `${selectedYear}-${String(i).padStart(2,'0')}`;
-   let act = (mon === selectedMonth) ? 'active' : '';
-   html += `<button class="tab ${act}" data-month="${mon}" role="tab">Tháng ${i}</button>`;
- }
- $('monthTabs').innerHTML = html;
-}
+    if (file.type.startsWith('image/')) {
+      $('previewImgTag').src = URL.createObjectURL(file);
+      $('previewImgTag').style.display = 'inline-block';
+      $('previewFileName').textContent = '✅ Đã nhận ảnh chụp màn hình!';
+    } else {
+      $('previewImgTag').style.display = 'none';
+      $('previewFileName').textContent = `📄 Tệp đính kèm: ${file.name}`;
+    }
+    toast('Đã nhận ảnh chụp màn hình! 📸');
+  }
 
-function renderWeekDays(){
- const names=['T2','T3','T4','T5','T6','T7','CN'];
- $('weekDays').innerHTML=Array.from({length:7},(_,i)=>{const d=dateAdd(weekStart,i),ts=state.tasks.filter(t=>t.date===d),done=doneCount(ts);
-   let isSel = (d===selectedDate) ? 'selected' : '';
-   let dots = ts.length ? `${done}/${ts.length} ✓` : '—';
-   return `<button class="week-day ${isSel}" data-date="${d}"><div class="dow">${names[i]}</div><div class="num">${Number(d.slice(-2))}</div><div class="dots">${dots}</div></button>`;
- }).join('');
-}
+  function resetProofFile() {
+    currentProofFile = null;
+    $('proofFileInput').value = '';
+    $('proofDropPrompt').style.display = 'block';
+    $('proofImgPreview').style.display = 'none';
+    $('previewImgTag').src = '';
+  }
 
-function renderTasks(){
- const monthTasks=tasksForMonth().filter(t=> filterSubject==='all' ? true : t.subject===filterSubject);
- const y = Number(selectedMonth.split('-')[0]);
- const m = Number(selectedMonth.split('-')[1]);
- 
- $('phase').innerHTML=`<b>Giai đoạn học tập (Tháng ${m}/${y}):</b> ${escapeHTML(phaseForMonth(m))}`;
- 
- let days = [selectedDate];
- 
- $('taskDays').innerHTML=days.map(day=>{
-  const ts=monthTasks.filter(t=>t.date===day).sort((a,b)=>(a.subject ? a.subject : '').localeCompare(b.subject ? b.subject : ''));
-  const dDone=doneCount(ts), kpi=pct(dDone,ts.length);
-  
-  const cards=ts.length ? ts.map(t=>{
-    let isDone = t.done ? 'done' : '';
-    let isChecked = t.done ? 'checked' : '';
-    let pnts = Number(t.points) ? Number(t.points) : 0;
-    let detailHtml = t.detail ? `<div class="task-detail">${linkifyText(t.detail)}</div>` : '';
-    let completedHtml = (t.done && t.completedAt) ? `<div class="task-detail">✓ Xong lúc ${new Date(t.completedAt).toLocaleString('vi-VN',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})}</div>` : '';
-    
-    let actionsHtml = isAdminUnlocked ? `
-      <div class="task-actions">
-        <button class="icon-btn" data-edit-task="${t.id}">✏️</button>
-        <button class="icon-btn" data-delete-task="${t.id}">🗑️</button>
-      </div>` : '';
+  $('btnRemoveProof').onclick = (e) => {
+    e.stopPropagation();
+    resetProofFile();
+  };
 
-    return `<div class="task ${isDone}">
-     <input type="checkbox" aria-label="Đánh dấu" data-toggle="${t.id}" ${isChecked}>
-     <span class="subject ${subjectClass(t.subject)}">${escapeHTML(t.subject)}</span>
-     <div>
-       <div class="task-title">${escapeHTML(t.title)} <span style="font-size:12px; color:#a46d22; font-weight:700;">(+${pnts}⭐)</span></div>
-       ${detailHtml}
-       ${completedHtml}
-     </div>
-     ${actionsHtml}
-    </div>`;
-  }).join('') : '<div class="empty">Chưa có bài nào.</div>';
-  
-  let addBtnHtml = isAdminUnlocked ? `
-    <div class="flex" style="justify-content:flex-end;padding-top:8px">
-      <button class="btn btn-soft btn-small" data-add-date="${day}">＋ Giao bài ngày này</button>
-    </div>` : '';
+  const dropZone = $('proofDropZone');
+  dropZone.onclick = () => $('proofFileInput').click();
 
-  return `<article class="day-card">
-    <div class="day-head">
-      <strong>🗓️ ${escapeHTML(fmtDate(day))}</strong>
-      <span class="kpi-tag">KPI ngày: ${kpi}% · ${dDone}/${ts.length} bài</span>
-    </div>
-    <div class="task-list">
-      ${cards}
-      ${addBtnHtml}
-    </div>
-  </article>`;
- }).join('');
-}
+  dropZone.ondragover = e => { e.preventDefault(); dropZone.classList.add('dragover'); };
+  dropZone.ondragleave = () => { dropZone.classList.remove('dragover'); };
+  dropZone.ondrop = e => {
+    e.preventDefault();
+    dropZone.classList.remove('dragover');
+    const f = e.dataTransfer.files[0];
+    if (f) setProofFile(f);
+  };
 
-function phaseForMonth(m){
- const p=['','Khởi động đầu năm','Củng cố nền tảng','Tăng cường thực hành','Học qua khám phá','Ôn tập hệ thống','Giai đoạn hè tự học','Khởi động năm học','Tạo đà tiến bộ','Ổn định nhịp học','Học chắc từng bước','Mở rộng kiến thức','Tổng kết năm học'];
- return p[m] ? p[m] : p[7];
-}
+  $('proofFileInput').onchange = e => {
+    const f = e.target.files[0];
+    if (f) setProofFile(f);
+  };
 
-function renderStats(){
- const ts=tasksForMonth(),done=doneCount(ts);
- $('statDone').textContent=`${done}/${ts.length}`;
- $('statKpi').textContent=pct(done,ts.length)+'%';
- $('statPoints').textContent=earnedPoints();$('statStreak').textContent=streak()+' ngày';
-}
+  $('submitProofDialog').addEventListener('paste', e => {
+    const items = (e.clipboardData || window.clipboardData)?.items;
+    if (!items) return;
+    for (let i = 0; i < items.length; i++) {
+      if (items[i].type.indexOf('image') !== -1) {
+        const file = items[i].getAsFile();
+        if (file) {
+          setProofFile(file);
+          e.preventDefault();
+          break;
+        }
+      }
+    }
+  });
 
-function streak(){
- const doneDates=new Set(state.tasks.filter(t=>t.done).map(t=>t.date));let d=todayISO(),n=0;
- if(!doneDates.has(d)){ d=dateAdd(d,-1); }
- while(doneDates.has(d) && n<365){n++; d=dateAdd(d,-1);}
- return n;
-}
+  // ========================================================
+  // 🐰 BẠN HỌC AI THỎ SIÊU QUẬY
+  // ========================================================
+  let aiSelectedBase64 = null;
+  let geminiApiKey = (localStorage.getItem('GEMINI_KEY') || '').trim();
 
-function renderSubjectStats(){
- $('subjectMonthLabel').textContent=selectedMonth.split('-').reverse().join('/');
- const ts=tasksForMonth();
- $('subjectStats').innerHTML=SUBJECTS.map(s=>{const list=ts.filter(t=>t.subject===s),d=doneCount(list),p=pct(d,list.length);return `<div class="subject-progress"><div class="row-between"><span><b>${escapeHTML(s)}</b> <span class="small-note">(${d}/${list.length} bài)</span></span><strong>${p}%</strong></div><div class="progress"><span style="width:${p}%"></span></div></div>`}).join('');
-}
+  $('btnResetAiChat').onclick = () => {
+    if (confirm("Cậu muốn tụi mình bắt đầu bài học mới hả?")) {
+      aiChatHistory = [];
+      $('aiChatBox').innerHTML = `<div class="ai-msg bot">🌸 Hí chào Khánh Huyền! Tớ là Thỏ Siêu Quậy nè 🐰 Cậu có câu đố hay bài tập nào thú vị không, tụi mình cùng chiến nào! ⭐🐰</div>`;
+      toast("Đã làm mới cuộc trò chuyện!");
+    }
+  };
 
-function renderRewards(){
- $('rewardsList').innerHTML=state.rewards.length?state.rewards.map(r=>{
-   let rDesc = r.desc ? r.desc : 'Phần thưởng nhỏ';
-   let isDisabled = earnedPoints() < Number(r.cost) ? 'disabled style="opacity:.5;cursor:not-allowed"' : '';
-   
-   let rewardActions = isAdminUnlocked ? `
-     <button class="icon-btn" data-edit-reward="${r.id}">✏️</button>
-     <button class="icon-btn" data-delete-reward="${r.id}">🗑️</button>
-   ` : '';
+  $('btnOpenAiModal').onclick = () => {
+    $('aiTutorDialog').showModal();
+    if (!geminiApiKey) {
+      setTimeout(() => {
+        const k = prompt("Mẹ nhập Gemini API Key để kích hoạt bạn học Thỏ Siêu Quậy cho con nhé:");
+        if (k && k.trim()) {
+          geminiApiKey = k.trim();
+          localStorage.setItem('GEMINI_KEY', geminiApiKey);
+          toast("Đã lưu API Key!");
+        }
+      }, 300);
+    }
+  };
 
-   return `<div class="reward-card">
-     <div class="row-between"><h3>🎁 ${escapeHTML(r.name)}</h3><span class="points">${Number(r.cost)} ⭐</span></div>
-     <p>${escapeHTML(rDesc)}</p>
-     <div class="flex">
-       <button class="btn btn-primary btn-small" data-redeem="${r.id}" ${isDisabled}>Đổi quà</button>
-       ${rewardActions}
-     </div>
-   </div>`;
- }).join('') : '<div class="empty">Chưa có phần thưởng.</div>';
+  $('btnAiKeySettings').onclick = () => {
+    const k = prompt("Cập nhật Gemini API Key:", geminiApiKey);
+    if (k !== null) {
+      geminiApiKey = k.trim();
+      localStorage.setItem('GEMINI_KEY', geminiApiKey);
+      toast("Đã lưu API Key mới!");
+    }
+  };
 
- if (state.redemptions && state.redemptions.length > 0) {
-    let historyHtml = state.redemptions.slice().reverse().map(redemption => {
-      return `
-        <div class="redeem-item">
-          <div class="info">
-            <strong>${escapeHTML(redemption.name)}</strong> (-${redemption.cost}⭐)
-            <br><span style="font-size:10px">${escapeHTML(shortDate(redemption.date))}</span>
+  function setAiImage(file) {
+    if (!file || !file.type.startsWith('image/')) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      aiSelectedBase64 = ev.target.result.split(',')[1];
+      $('aiPreviewThumb').src = ev.target.result;
+      $('aiImgPreview').style.display = 'flex';
+      toast('Thỏ đã nhận ảnh của cậu rồi nè! 📷');
+    };
+    reader.readAsDataURL(file);
+  }
+
+  $('aiFileInput').onchange = e => {
+    const file = e.target.files[0];
+    if (file) setAiImage(file);
+  };
+
+  $('aiTutorDialog').addEventListener('paste', e => {
+    const items = (e.clipboardData || window.clipboardData)?.items;
+    if (!items) return;
+    for (let i = 0; i < items.length; i++) {
+      if (items[i].type.indexOf('image') !== -1) {
+        const file = items[i].getAsFile();
+        if (file) {
+          setAiImage(file);
+          e.preventDefault();
+          break;
+        }
+      }
+    }
+  });
+
+  $('aiBtnClearImg').onclick = () => {
+    aiSelectedBase64 = null;
+    $('aiImgPreview').style.display = 'none';
+    $('aiFileInput').value = '';
+  };
+
+  let recognition = null;
+  if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+    const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+    recognition = new SpeechRec();
+    recognition.lang = 'vi-VN';
+    recognition.onstart = () => $('aiBtnMic').classList.add('recording');
+    recognition.onend = () => $('aiBtnMic').classList.remove('recording');
+    recognition.onresult = e => {
+      $('aiTextInput').value = e.results[0][0].transcript;
+      sendAiMessage();
+    };
+  }
+
+  $('aiBtnMic').onclick = () => {
+    if (!recognition) return alert("Trình duyệt chưa hỗ trợ ghi âm.");
+    try { recognition.start(); } catch(e){ recognition.stop(); }
+  };
+
+  function speakText(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const clean = text.replace(/[*#_~]/g, '');
+      const utt = new SpeechSynthesisUtterance(clean);
+      utt.lang = /[a-zA-Z]{4,}/.test(clean) ? 'en-US' : 'vi-VN';
+      utt.rate = 0.95;
+      window.speechSynthesis.speak(utt);
+    }
+  }
+
+  function appendAiMsg(role, text, imgBase64 = null) {
+    const box = $('aiChatBox');
+    const div = document.createElement('div');
+    div.className = `ai-msg ${role}`;
+    if (imgBase64) div.innerHTML += `<img src="data:image/jpeg;base64,${imgBase64}"><br>`;
+    div.innerHTML += text;
+    box.appendChild(div);
+    box.scrollTop = box.scrollHeight;
+    return div;
+  }
+
+  const ULTRA_FAST_MODELS = ['gemini-3.5-flash-lite', 'gemini-3.6-flash', 'gemini-3.8-flash'];
+
+  async function callUltraFastGemini(contentsPayload, systemPrompt) {
+    let saved = localStorage.getItem('GEMINI_WORKING_MODEL') || 'gemini-3.5-flash-lite';
+    let modelsToTry = [saved, ...ULTRA_FAST_MODELS.filter(m => m !== saved)];
+
+    for (const m of modelsToTry) {
+      try {
+        const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent?key=${geminiApiKey}`;
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            systemInstruction: { parts: [{ text: systemPrompt }] },
+            contents: contentsPayload,
+            generationConfig: {
+              maxOutputTokens: 250,
+              thinkingConfig: { thinkingLevel: m.includes('lite') ? 'minimal' : 'low' }
+            }
+          })
+        });
+
+        const data = await res.json();
+        if (data.candidates && data.candidates[0]) {
+          localStorage.setItem('GEMINI_WORKING_MODEL', m);
+          return data;
+        }
+
+        if (data.error && data.error.message && data.error.message.includes('models/')) {
+          const match = data.error.message.match(/use models\/([a-zA-Z0-9._-]+)/);
+          if (match && match[1] && !modelsToTry.includes(match[1])) {
+            modelsToTry.push(match[1]);
+          }
+        }
+      } catch(e) {
+        console.warn(`Thử model ${m} không thành công:`, e);
+      }
+    }
+    throw new Error("Không thể kết nối đến máy chủ Google AI. Mẹ kiểm tra lại API Key nhé!");
+  }
+
+  async function sendAiMessage() {
+    const text = $('aiTextInput').value.trim();
+    if (!text && !aiSelectedBase64) return;
+    if (!geminiApiKey) {
+      alert("Mẹ bấm vào nút '⚙️ Nhập Key' ở góc trên để điền Gemini API Key nhé!");
+      return;
+    }
+
+    const userImg = aiSelectedBase64;
+    appendAiMsg('user', text, userImg);
+    $('aiTextInput').value = '';
+    $('aiBtnClearImg').click();
+
+    const currentParts = [];
+    if (userImg) {
+      currentParts.push({
+        inlineData: {
+          mimeType: "image/jpeg",
+          data: userImg
+        }
+      });
+    }
+    currentParts.push({ text: text || "Thỏ xem hình này rồi cùng tớ giải nhé!" });
+
+    aiChatHistory.push({
+      role: 'user',
+      parts: currentParts
+    });
+
+    if (aiChatHistory.length > 12) {
+      aiChatHistory = aiChatHistory.slice(-12);
+    }
+
+    const loading = appendAiMsg('bot', '🐰 Thỏ đang nghĩ nè<span class="typing-dots"><span>.</span><span>.</span><span>.</span></span>');
+
+    try {
+      const systemPrompt = `Bạn tên là "Thỏ Siêu Quậy" - Bạn học cùng bàn, thông minh, tinh nghịch, lém lỉnh, thân thiết của bạn gái Khánh Huyền (học sinh tiểu học).
+
+QUY TẮC XƯNG HÔ:
+- Tự xưng: "tớ" hoặc "Thỏ Siêu Quậy".
+- Gọi bạn học: "cậu", "Khánh Huyền" hoặc "cô chủ nhỏ Khánh Huyền".
+- TUYỆT ĐỐI KHÔNG BAO GIỜ GỌI LÀ "cậu chủ nhỏ" (Khánh Huyền là con gái!).
+- Không xưng là "cô", "thầy", "chị", "con". Trò chuyện như hai bạn nhỏ cùng bàn.
+
+QUY TẮC ĐỐI CHIẾU KẾT QUẢ TOÁN HỌC (BẮT BUỘC TUÂN THỦ):
+1. PHẢI TỰ TÍNH NHẨM ĐÁP ÁN ĐÚNG TRƯỚC: Khi bạn Khánh Huyền đưa ra một con số kết quả, Thỏ phải tự tính xem con số đó ĐÚNG hay SAI so với phép tính.
+2. NẾU BẠN NÓI SAI (Ví dụ: phép tính ra 90 mà bạn trả lời 80):
+   - CẤM TUYỆT ĐỐI: KHÔNG ĐƯỢC hoan hô, KHÔNG ĐƯỢC khen "Chuẩn", KHÔNG ĐƯỢC khen "Chính xác", KHÔNG ĐƯỢC tự nhận vơ là bạn đã đúng!
+   - PHẢI BÁO BẠN TÍNH SAI RỒI NHẸ NHÀNG, HÓM HỈNH: "Ui da, 80 chưa đúng rồi Khánh Huyền ơi! Tớ tính lại thì không phải số đó đâu nha 🐰. Cậu thử tính lại từng bước xem bằng mấy nhé!".
+3. NẾU BẠN NÓI ĐÚNG: Lúc này mới được hoan hô, khen ngợi và cùng nhau qua bước tiếp theo.
+
+QUY TẮC TRÌNH BÀY:
+- CẤM TUYỆT ĐỐI ký hiệu LaTeX, mã code, dấu gạch chéo \\ hay dấu đô la ($).
+- Dấu nhân bắt buộc viết là chữ "x" (Ví dụ: (30 + 15) x 2).
+- Dấu chia bắt buộc viết là dấu ":" (Ví dụ: 60 : 2).
+- CẤM DÙNG dấu sao (*) hay (**) để in đậm chữ.
+- Luôn dùng emoji đáng yêu 🐰⭐🌸🎉.`;
+
+      let data = await callUltraFastGemini(aiChatHistory, systemPrompt);
+      loading.remove();
+
+      if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts) {
+        const allParts = data.candidates[0].content.parts;
+        const replyParts = allParts.filter(p => !p.thought);
+        let reply = (replyParts.length > 0 ? replyParts : allParts).map(p => p.text || '').join('').trim();
+        
+        reply = cleanMathText(reply);
+
+        appendAiMsg('bot', reply || 'Thỏ đây! Cậu cần tớ cùng làm bài nào nào? 🐰🌸');
+        speakText(reply);
+
+        aiChatHistory.push({
+          role: 'model',
+          parts: [{ text: reply }]
+        });
+      } else {
+        appendAiMsg('bot', 'Tớ chưa nghe rõ, cậu nói lại lần nữa nhé bạn ơi! 🥺');
+      }
+    } catch(err) {
+      loading.remove();
+      appendAiMsg('bot', 'Lỗi kết nối rồi cậu ơi: ' + err.message);
+    }
+  }
+
+  $('aiBtnSend').onclick = sendAiMessage;
+  $('aiTextInput').onkeypress = e => { if (e.key === 'Enter') sendAiMessage(); };
+
+  // ==========================================
+  // ⚙️ ĐỒNG BỘ GOOGLE SHEETS
+  // ==========================================
+  $('btnConfigSheet').onclick = () => {
+    const current = getStoredSheetUrl();
+    const inputUrl = prompt("Mẹ dán đường link Google Sheet (gochoctappro) vào đây nhé:\n(Ví dụ: https://docs.google.com/spreadsheets/d/...)", current);
+    if (inputUrl && inputUrl.trim()) {
+      localStorage.setItem('CUSTOM_SHEET_URL', inputUrl.trim());
+      updateSheetLinkUI();
+      toast('Đã lưu link mới! Bắt đầu đồng bộ...');
+      syncGoogleSheetsToSupabase();
+    }
+  };
+
+  function fetchGoogleSheetJSONP(sheetId, gid = '0') {
+    return new Promise((resolve, reject) => {
+      const cbName = 'gvizCb_' + Math.floor(Math.random() * 1000000);
+      const timer = setTimeout(() => {
+        cleanup();
+        reject(new Error("Quá thời gian tải Google Sheet. Mẹ kiểm tra mạng nhé!"));
+      }, 12000);
+
+      function cleanup() {
+        clearTimeout(timer);
+        delete window[cbName];
+        const s = document.getElementById(cbName);
+        if (s) s.remove();
+      }
+
+      window[cbName] = function(json) {
+        cleanup();
+        resolve(json);
+      };
+
+      const script = document.createElement('script');
+      script.id = cbName;
+      script.src = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=responseHandler:${cbName}&gid=${gid}`;
+      script.onerror = () => {
+        cleanup();
+        reject(new Error("Lỗi tải Google Sheet. Mẹ nhớ bấm Chia sẻ -> 'Bất kỳ ai có liên kết đều có thể xem' nhé!"));
+      };
+      document.body.appendChild(script);
+    });
+  }
+
+  async function syncGoogleSheetsToSupabase() {
+    const rawUrl = getStoredSheetUrl();
+    const btn = $('btnSyncSheet');
+    btn.disabled = true;
+    btn.textContent = 'Đang đồng bộ... ⏳';
+    toast('Đang đọc bài tập từ Google Sheets...');
+
+    try {
+      const idMatch = rawUrl.match(/\/d\/([a-zA-Z0-9-_]+)/);
+      if (!idMatch) throw new Error("Link Google Sheet chưa đúng định dạng.");
+      const sheetId = idMatch[1];
+      const gidMatch = rawUrl.match(/gid=([0-9]+)/);
+      const gid = gidMatch ? gidMatch[1] : '0';
+
+      const json = await fetchGoogleSheetJSONP(sheetId, gid);
+      const rows = (json && json.table && json.table.rows) ? json.table.rows : [];
+
+      const tasksToUpsert = [];
+      for (const row of rows) {
+        const c = row.c || [];
+        const taskId = c[0] ? String(c[0].v || '').trim() : '';
+        const title = c[1] ? String(c[1].v || '').trim() : '';
+        const subject = c[2] ? String(c[2].v || 'Toán').trim() : 'Toán';
+
+        let dateStr = '';
+        if (c[3]) {
+          if (c[3].f) dateStr = c[3].f.trim();
+          else if (typeof c[3].v === 'string') dateStr = c[3].v.trim();
+          if (typeof c[3].v === 'string' && c[3].v.startsWith('Date(')) {
+            const m = c[3].v.match(/Date\((\d+),(\d+),(\d+)\)/);
+            if (m) dateStr = `${m[1]}-${String(Number(m[2])+1).padStart(2,'0')}-${String(m[3]).padStart(2,'0')}`;
+          }
+        }
+        if (dateStr.includes('/')) {
+          const p = dateStr.split('/');
+          if (p.length === 3) dateStr = p[0].length === 4 ? `${p[0]}-${p[1].padStart(2,'0')}-${p[2].padStart(2,'0')}` : `${p[2]}-${p[1].padStart(2,'0')}-${p[0].padStart(2,'0')}`;
+        }
+        if (!dateStr || dateStr.length < 8) dateStr = todayISO();
+
+        const detail = c[5] ? String(c[5].v || '').trim() : '';
+        const points = c[6] ? Number(c[6].v) || 1 : 1;
+
+        if (taskId && title) {
+          tasksToUpsert.push({
+            sheet_id: taskId,
+            title: title,
+            subject: subject,
+            task_date: dateStr,
+            detail: detail,
+            points: points
+          });
+        }
+      }
+
+      if (tasksToUpsert.length === 0) throw new Error("Chưa có dòng bài tập nào trong Google Sheet.");
+
+      if (sb) {
+        const { error } = await sb.from('tasks').upsert(tasksToUpsert, { onConflict: 'sheet_id' });
+        if (error) throw error;
+      }
+
+      toast(`🎉 Đã đồng bộ ${tasksToUpsert.length} bài lên Web!`);
+
+      const firstDate = tasksToUpsert[0].task_date;
+      selectedDate = firstDate;
+      selectedMonth = monthISO(firstDate);
+      selectedYear = selectedMonth.split('-')[0];
+      weekStart = mondayOf(firstDate);
+
+      await loadDataFromSupabase();
+    } catch (err) {
+      alert("Lỗi đồng bộ: " + err.message);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = '🔄 Đồng bộ Google Sheets';
+    }
+  }
+
+  $('btnSyncSheet').onclick = syncGoogleSheetsToSupabase;
+
+  // ==========================================
+  // TẢI VÀ RENDER DỮ LIỆU TỪ SUPABASE
+  // ==========================================
+  async function loadDataFromSupabase() {
+    if (!sb) return render();
+    try {
+      const [tasksRes, subsRes, rewRes, redRes] = await Promise.all([
+        sb.from('tasks').select('*').order('created_at', { ascending: false }),
+        sb.from('task_submissions').select('*'),
+        sb.from('rewards').select('*'),
+        sb.from('redemptions').select('*').order('created_at', { ascending: false })
+      ]);
+
+      state.tasks = tasksRes.data || [];
+      state.submissions = subsRes.data || [];
+      state.rewards = rewRes.data || [];
+      state.redemptions = redRes.data || [];
+
+      render();
+    } catch(err) {
+      console.error(err);
+      render();
+    }
+  }
+
+  function earnedPoints() {
+    const approvedTaskIds = new Set(state.submissions.filter(s => s.status === 'approved').map(s => s.task_id));
+    const earned = state.tasks.filter(t => approvedTaskIds.has(t.id)).reduce((sum, t) => sum + (Number(t.points) || 1), 0);
+    const spent = state.redemptions.reduce((sum, r) => sum + (Number(r.cost) || 0), 0);
+    return Math.max(0, earned - spent);
+  }
+
+  function render() {
+    $('todayPill').textContent = '📅 ' + new Date().toLocaleDateString('vi-VN', { weekday: 'long', day: '2-digit', month: 'long' });
+    $('yearSelect').value = selectedYear;
+
+    renderMonthTabs();
+    renderWeekDays();
+    renderTasks();
+    renderStats();
+    renderSubjectStats();
+    renderRewards();
+    renderGoal();
+    renderHistory();
+  }
+
+  function renderMonthTabs(){
+    let html = '';
+    for(let i=1; i<=12; i++){
+      let mon = `${selectedYear}-${String(i).padStart(2,'0')}`;
+      let act = (mon === selectedMonth) ? 'active' : '';
+      html += `<button class="tab ${act}" data-month="${mon}">Tháng ${i}</button>`;
+    }
+    $('monthTabs').innerHTML = html;
+  }
+
+  function renderWeekDays(){
+    const names=['T2','T3','T4','T5','T6','T7','CN'];
+    $('weekDays').innerHTML = Array.from({length:7}, (_,i) => {
+      const d = dateAdd(weekStart, i);
+      const dayTasks = state.tasks.filter(t => t.task_date === d);
+      const approvedCount = dayTasks.filter(t => state.submissions.some(s => s.task_id === t.id && s.status === 'approved')).length;
+      let isSel = (d === selectedDate) ? 'selected' : '';
+      let dots = dayTasks.length ? `${approvedCount}/${dayTasks.length} ✓` : '—';
+      return `<button class="week-day ${isSel}" data-date="${d}"><div class="dow">${names[i]}</div><div class="num">${Number(d.slice(-2))}</div><div class="dots">${dots}</div></button>`;
+    }).join('');
+  }
+
+  function renderTasks() {
+    const monthTasks = state.tasks.filter(t => monthISO(t.task_date) === selectedMonth && (filterSubject === 'all' || t.subject === filterSubject));
+    const currentDayTasks = monthTasks.filter(t => t.task_date === selectedDate);
+    const y = Number(selectedMonth.split('-')[0]), m = Number(selectedMonth.split('-')[1]);
+    $('phase').innerHTML = `<b>Kế hoạch học tập (Tháng ${m}/${y}):</b> Mỗi bài học hoàn thành là một bước tiến nhỏ! 🌸`;
+
+    const cards = currentDayTasks.length ? currentDayTasks.map(t => {
+      const sub = state.submissions.find(s => s.task_id === t.id);
+      const isApproved = sub && sub.status === 'approved';
+      const isPending = sub && sub.status === 'pending';
+      const isRedo = sub && sub.status === 'redo';
+
+      let statusBadge = `<span class="badge-status status-todo">Chưa làm</span>`;
+      if (isApproved) statusBadge = `<span class="badge-status status-done">✓ Mẹ đã duyệt (+${t.points}⭐)</span>`;
+      else if (isPending) statusBadge = `<span class="badge-status status-pending">⏳ Chờ mẹ duyệt</span>`;
+      else if (isRedo) statusBadge = `<span class="badge-status status-redo">⚠️ Cần làm lại</span>`;
+
+      // Nút mở trắc nghiệm tự chấm nếu có bộ đề
+      let quizBtnHtml = '';
+      if (t.questions && Array.isArray(t.questions) && t.questions.length > 0) {
+        let qCount = t.questions.length;
+        let btnText = isApproved ? `📝 Xem lại kết quả (${qCount} câu)` : `📝 Làm bài kiểm tra (${qCount} câu)`;
+        quizBtnHtml = `<div><button type="button" class="btn-quiz" data-open-quiz="${t.id}">${btnText}</button></div>`;
+      }
+
+      // Khung lời nhắc của mẹ nếu bị yêu cầu làm lại
+      let redoAlertHtml = '';
+      if (isRedo) {
+        redoAlertHtml = `
+          <div style="background:#fff0f4; border-left:4px solid #e95f83; padding:8px 12px; border-radius:8px; margin-top:8px; color:#b64b63; font-size:13px; line-height:1.4;">
+            <b>👩 Lời nhắn từ Mẹ:</b> ${escapeHTML(sub.note || 'Con kiểm tra lại bài và làm lại giúp mẹ nhé!')}
           </div>
-          <button class="icon-btn" data-undo-redeem="${redemption.id}" title="Hoàn tác để lấy lại điểm">↩️ Hủy</button>
+        `;
+      }
+
+      let actionBtn = '';
+      if (!sub) {
+        actionBtn = `<button class="btn btn-primary btn-small" data-submit-task="${t.id}">📸 Nộp bài</button>`;
+      } else if (isRedo) {
+        // Nút Nộp lại bài nổi bật cho con
+        actionBtn = `
+          <div class="flex" style="gap:6px;">
+            <button class="btn btn-primary btn-small" data-submit-task="${t.id}" style="background:#e95f83;">🔄 Nộp lại bài</button>
+            <button class="btn btn-soft btn-small" data-view-proof="${t.id}">🔍 Xem bài cũ</button>
+          </div>
+        `;
+      } else {
+        actionBtn = `
+          <div class="flex" style="gap:6px;">
+            <button class="btn btn-soft btn-small" data-view-proof="${t.id}">🔍 Xem bài nộp</button>
+            ${isAdminUnlocked && isPending ? `<button class="btn btn-green btn-small" data-quick-approve="${sub.id}" data-pts="${t.points}">✅ Duyệt nhanh</button>` : ''}
+          </div>
+        `;
+      }
+
+      let adminBtns = isAdminUnlocked ? `
+        <button class="icon-btn" data-delete-task="${t.id}" title="Xóa bài">🗑️</button>
+      ` : '';
+
+      return `
+        <div class="task ${isApproved ? 'done' : ''}">
+          <span class="subject ${subjectClass(t.subject)}">${escapeHTML(t.subject)}</span>
+          <div>
+            <div class="task-title">${escapeHTML(t.title)} <span style="font-size:12px; color:#a46d22;">(+${t.points}⭐)</span> ${statusBadge}</div>
+            ${t.detail ? `<div class="task-detail">${linkifyDetail(t.detail)}</div>` : ''}
+            ${quizBtnHtml}
+            ${redoAlertHtml}
+          </div>
+          <div class="task-actions">
+            ${actionBtn}
+            ${adminBtns}
+          </div>
+        </div>
+      `;
+    }).join('') : '<div class="empty">Chưa có bài nào cho ngày này. Mẹ bấm chọn các ngày khác trên thanh lịch tuần nhé!</div>';
+
+    $('taskDays').innerHTML = `
+      <article class="day-card">
+        <div class="day-head">
+          <strong>🗓️ ${escapeHTML(fmtDate(selectedDate))}</strong>
+          <span class="kpi-tag">${currentDayTasks.length} bài tập</span>
+        </div>
+        <div class="task-list">${cards}</div>
+      </article>
+    `;
+  }
+
+  function renderStats() {
+    const monthTasks = state.tasks.filter(t => monthISO(t.task_date) === selectedMonth);
+    const approvedCount = monthTasks.filter(t => state.submissions.some(s => s.task_id === t.id && s.status === 'approved')).length;
+    const pendingCount = state.submissions.filter(s => s.status === 'pending').length;
+
+    $('statDone').textContent = `${approvedCount}/${monthTasks.length}`;
+    $('statKpi').textContent = monthTasks.length ? Math.round((approvedCount / monthTasks.length) * 100) + '%' : '0%';
+    $('statPoints').textContent = earnedPoints();
+    $('statPending').textContent = pendingCount;
+    $('statStreak').textContent = streak() + ' ngày';
+  }
+
+  function renderSubjectStats(){
+    $('subjectMonthLabel').textContent = selectedMonth.split('-').reverse().join('/');
+    const monthTasks = state.tasks.filter(t => monthISO(t.task_date) === selectedMonth);
+    $('subjectStats').innerHTML = SUBJECTS.map(s => {
+      const list = monthTasks.filter(t => t.subject === s);
+      const d = list.filter(t => state.submissions.some(sub => sub.task_id === t.id && sub.status === 'approved')).length;
+      const p = list.length ? Math.round((d / list.length) * 100) : 0;
+      return `
+        <div class="subject-progress">
+          <div class="row-between">
+            <span><b>${escapeHTML(s)}</b> <span class="small-note">(${d}/${list.length} bài)</span></span>
+            <strong>${p}%</strong>
+          </div>
+          <div class="progress"><span style="width:${p}%"></span></div>
         </div>
       `;
     }).join('');
-    $('redeemHistoryList').innerHTML = historyHtml;
-  } else {
-    $('redeemHistoryList').innerHTML = '<div class="small-note" style="text-align:center">Chưa đổi quà nào.</div>';
   }
-}
 
-function renderGoal(){
- const ts=weekTasks(),p=pct(doneCount(ts),ts.length);
- $('weekKpiLabel').textContent=p+'\%';$('weekKpiBar').style.width=p+'%';$('goalLabel').textContent=state.goal+'\%';$('goalMessage').textContent=p>=state.goal?'🎉 Tuyệt vời! Con đã đạt mục tiêu tuần này!':`Cố lên nhé! Còn ${Math.max(0,state.goal-p)} điểm phần trăm.`;
-}
-
-function renderHistory(){
- const f=$('historyFilter').value, q=$('historySearch').value.trim().toLocaleLowerCase('vi');
- let ts=[...state.tasks].sort((a,b)=>b.date.localeCompare(a.date));
- ts=ts.filter(t=>{
-   const late = !t.done && (t.due ? t.due : t.date) < todayISO();
-   const ok = (f==='all') ? true : ((f==='done'&&t.done) ? true : ((f==='pending'&&!t.done&&!late) ? true : ((f==='late'&&late) ? true : false)));
-   let titleLower = t.title ? t.title.toLocaleLowerCase('vi') : '';
-   let detailLower = t.detail ? t.detail.toLocaleLowerCase('vi') : '';
-   let matchQ = !q ? true : (titleLower.includes(q) || detailLower.includes(q));
-   return ok && matchQ;
- });
- 
- $('historyList').innerHTML=ts.length?ts.slice(0,100).map(t=>{
-   const late = !t.done && (t.due ? t.due : t.date) < todayISO();
-   const status = t.done ? '<span class="status done">Hoàn thành</span>' : (late ? '<span class="status late">Quá hạn</span>' : '<span class="status pending">Chưa xong</span>');
-   let dueText = t.due ? ' · Hạn: '+escapeHTML(shortDate(t.due)) : '';
-   return `<div class="history-row"><div class="row-between" style="align-items:flex-start"><div><b>${escapeHTML(t.title)}</b><div class="small-note">${escapeHTML(t.subject)} · Giao: ${escapeHTML(shortDate(t.date))}${dueText}</div></div>${status}</div></div>`;
- }).join('') : '<div class="empty">Không tìm thấy bài tập.</div>';
-}
-
-function openTask(task=null,date=selectedDate){
- $('taskForm').reset();$('taskId').value = task ? task.id : '';
- $('taskDialogTitle').textContent = task ? '✏️ Sửa bài tập' : '🌸 Giao bài tập mới';
- $('taskTitle').value = task ? task.title : '';
- $('taskSubject').value = task ? task.subject : 'Toán';
- $('taskDate').value = task ? task.date : date;
- $('taskDetail').value = task ? task.detail : '';
- $('taskPoints').value = task && task.points !== undefined ? task.points : 1;
- $('taskDue').value = task ? task.due : '';
- $('taskDialog').showModal();
-}
-
-function openReward(reward=null){
- $('rewardForm').reset();$('rewardId').value = reward ? reward.id : '';
- $('rewardDialogTitle').textContent = reward ? '✏️ Sửa phần thưởng' : '🎁 Thêm phần thưởng';
- $('rewardName').value = reward ? reward.name : '';
- $('rewardDesc').value = reward ? reward.desc : '';
- $('rewardCost').value = reward && reward.cost !== undefined ? reward.cost : 10;
- $('rewardDialog').showModal();
-}
-
-function downloadFile(name,content,type='application/json'){
- const blob=new Blob([content],{type}),url=URL.createObjectURL(blob),a=document.createElement('a');
- a.href=url; a.download=name; document.body.appendChild(a); a.click(); a.remove();
- setTimeout(()=>URL.revokeObjectURL(url),1000);
-}
-
-function exportData(){
-  downloadFile(`goc-hoc-tap-${todayISO()}.json`,JSON.stringify(state,null,2));
-  toast('Đã tạo bản sao dữ liệu.');
-}
-
-function weeklyReport(){
- const ts=weekTasks(),done=doneCount(ts),p=pct(done,ts.length),start=weekStart,end=dateAdd(start,6);
- const bySubject=SUBJECTS.map(s=>{const a=ts.filter(t=>t.subject===s);return a.length?`<li>${escapeHTML(s)}: ${doneCount(a)}/${a.length} bài</li>`:''}).join('');
- $('reportContent').innerHTML=`<p><b>Thời gian:</b> ${escapeHTML(shortDate(start))} – ${escapeHTML(shortDate(end))}</p><div class="stat" style="margin:12px 0"><div class="label">KPI TUẦN</div><div class="value">${p}%</div><div class="progress"><span style="width:${p}%"></span></div><div class="hint">${done}/${ts.length} bài đã hoàn thành · Mục tiêu ${state.goal}%</div></div><h3 class="section-title">Theo từng môn</h3><ul>${bySubject ? bySubject : '<li>Chưa có bài tập trong tuần này.</li>'}</ul><p>${p>=state.goal?'🌟 Con đã đạt mục tiêu!':'🌱 Cố gắng tuần sau nhé!'}</p><p class="small-note">Điểm hiện có: ${earnedPoints()} ⭐.</p>`;
- $('reportDialog').showModal();
-}
-
-// Đồng bộ tự động ngầm với Google Sheets (Đã khắc phục lỗi ngày tháng hiển thị undefined)
-async function syncFromGAS() {
-  const url = "https://script.google.com/macros/s/AKfycbzAoMc2wRYBvra-1OkSpXI0P-EJ9ZkO9Op4yLuV7WFXCNzo_mBIdE1yOmxPjA0Kuurc4w/exec";
-  try {
-    toast('Đang đồng bộ dữ liệu...');
-    const response = await fetch(url, { redirect: 'follow' });
-    const result = await response.json();
-    if (Array.isArray(result)) {
-      result.forEach(item => {
-        if (!item.taskId) return;
-        
-        let parseDate = (dStr) => {
-          if (!dStr) return todayISO();
-          let str = String(dStr);
-          // Nếu nhận chuỗi định dạng dài kiểu "Tue Oct 13 2026..."
-          if (str.includes("GMT") || str.includes("Oct") || str.includes("Jan") || str.includes("Feb") || str.includes("Mar") || str.includes("Apr") || str.includes("May") || str.includes("Jun") || str.includes("Jul") || str.includes("Aug") || str.includes("Sep") || str.includes("Nov") || str.includes("Dec")) {
-            let dObj = new Date(str);
-            if (!isNaN(dObj.getTime())) {
-              let y = dObj.getFullYear();
-              let m = String(dObj.getMonth() + 1).padStart(2, '0');
-              let d = String(dObj.getDate()).padStart(2, '0');
-              return `${y}-${m}-${d}`;
-            }
-          }
-          // Nếu định dạng dd/mm/yyyy
-          if (str.includes('/')) {
-            const parts = str.split('/');
-            if (parts.length === 3) {
-              return `${parts[2]}-${parts[1].padStart(2,'0')}-${parts[0].padStart(2,'0')}`;
-            }
-          }
-          return str;
-        };
-
-        const formattedDate = parseDate(item.date);
-        const formattedDue = item.due ? parseDate(item.due) : '';
-
-        const existing = state.tasks.find(t => t.id === item.taskId);
-        if (existing) {
-          existing.title = item.title !== undefined ? item.title : existing.title;
-          existing.subject = item.subject !== undefined ? item.subject : existing.subject;
-          existing.date = formattedDate;
-          existing.due = formattedDue;
-          existing.detail = item.detail !== undefined ? item.detail : existing.detail;
-          existing.points = item.points !== undefined ? Number(item.points) : existing.points;
-        } else {
-          state.tasks.push({
-            id: item.taskId,
-            title: item.title || 'Bài tập mới',
-            subject: item.subject || 'Toán',
-            date: formattedDate,
-            due: formattedDue,
-            detail: item.detail || '',
-            points: Number(item.points) || 1,
-            done: false,
-            completedAt: ''
-          });
-        }
-      });
-      save(); 
-      render(); 
-      toast('Đồng bộ thành công! 🎉');
-    } else {
-      alert('Dữ liệu trả về từ Google Sheets không hợp lệ.');
-    }
-  } catch (err) { alert('Lỗi kết nối: ' + err.message); }
-}
-
-$('btnRoleKid').addEventListener('click', () => {
-  isAdminUnlocked = false;
-  $('appBody').classList.remove('unlocked');
-  $('btnRoleKid').classList.add('active');$('btnRoleMom').classList.remove('active');
-  toast('Đang ở chế độ Khánh Huyền.');
-  render();
-});
-
-$('btnRoleMom').addEventListener('click', () => {
-  if (!isAdminUnlocked) {
-    const pwd = prompt("Nhập mật khẩu của Mẹ để mở khóa:");
-    if (pwd === "2017") {
-      isAdminUnlocked = true;
-      $('appBody').classList.add('unlocked');
-      $('btnRoleMom').classList.add('active');$('btnRoleKid').classList.remove('active');
-      toast('Đã mở khóa mục của Mẹ thành công! 🔓');
-      render();
-    } else if (pwd !== null) {
-      alert('Sai mật khẩu!');
-    }
-  } else {
-    $('btnRoleMom').classList.add('active');$('btnRoleKid').classList.remove('active');
+  function renderGoal(){
+    const ts = weekTasks();
+    const d = ts.filter(t => state.submissions.some(sub => sub.task_id === t.id && sub.status === 'approved')).length;
+    const p = ts.length ? Math.round((d / ts.length) * 100) : 0;
+    $('weekKpiLabel').textContent = p + '%';
+    $('weekKpiBar').style.width = p + '%';
+    $('goalLabel').textContent = state.goal + '%';
+    $('goalMessage').textContent = p >= state.goal ? '🎉 Tuyệt vời! Con đã đạt mục tiêu tuần này!' : `Cố lên nhé! Còn ${Math.max(0, state.goal - p)}% nữa.`;
   }
-});
 
-document.addEventListener('click', e => {
-  const tab = e.target.closest('[data-month]');
-  if(tab) {
-    selectedMonth = tab.dataset.month;
-    selectedDate = selectedMonth === monthISO(selectedDate) ? selectedDate : selectedMonth + '-01';
+  function renderHistory(){
+    const f = $('historyFilter').value, q = $('historySearch').value.trim().toLocaleLowerCase('vi');
+    let ts = [...state.tasks].sort((a,b) => b.task_date.localeCompare(a.task_date));
+
+    ts = ts.filter(t => {
+      const sub = state.submissions.find(s => s.task_id === t.id);
+      const isDone = sub && sub.status === 'approved';
+      const isPending = sub && sub.status === 'pending';
+      const isRedo = sub && sub.status === 'redo';
+      const isLate = !isDone && !isPending && !isRedo && t.task_date < todayISO();
+
+      const ok = (f==='all') ? true : ((f==='done'&&isDone) ? true : ((f==='pending'&&isPending) ? true : ((f==='redo'&&isRedo) ? true : ((f==='late'&&isLate) ? true : false))));
+      let titleLower = (t.title || '').toLocaleLowerCase('vi');
+      return ok && (!q || titleLower.includes(q));
+    });
+
+    $('historyList').innerHTML = ts.length ? ts.slice(0, 50).map(t => {
+      const sub = state.submissions.find(s => s.task_id === t.id);
+      const isDone = sub && sub.status === 'approved';
+      const isPending = sub && sub.status === 'pending';
+      const isRedo = sub && sub.status === 'redo';
+      const isLate = !isDone && !isPending && !isRedo && t.task_date < todayISO();
+
+      const status = isDone ? '<span class="badge-status status-done">Hoàn thành</span>' : (isPending ? '<span class="badge-status status-pending">Chờ duyệt</span>' : (isRedo ? '<span class="badge-status status-redo">Cần làm lại</span>' : (isLate ? '<span class="badge-status" style="background:#ffe4e8;color:#b64b63;">Quá hạn</span>' : '<span class="badge-status status-todo">Chưa xong</span>')));
+      return `
+        <div class="history-row">
+          <div class="row-between" style="align-items:flex-start">
+            <div>
+              <b>${escapeHTML(t.title)}</b>
+              <div class="small-note">${escapeHTML(t.subject)} · Ngày: ${escapeHTML(shortDate(t.task_date))}</div>
+            </div>
+            ${status}
+          </div>
+        </div>
+      `;
+    }).join('') : '<div class="empty">Không tìm thấy bài tập.</div>';
+  }
+
+  $('historyFilter').onchange = renderHistory;
+  $('historySearch').oninput = renderHistory;
+
+  $('yearSelect').onchange = e => {
+    selectedYear = e.target.value;
+    selectedMonth = `${selectedYear}-${selectedMonth.split('-')[1] || '01'}`;
+    selectedDate = `${selectedMonth}-01`;
     weekStart = mondayOf(selectedDate);
     render();
-  }
-});
+  };
 
-$('yearSelect').addEventListener('change', e => {
-  selectedYear = e.target.value;
-  let mm = selectedMonth.split('-')[1] ? selectedMonth.split('-')[1] : '01';
-  selectedMonth = `${selectedYear}-${mm}`;
-  selectedDate = `${selectedMonth}-01`;
-  weekStart = mondayOf(selectedDate);
-  render();
-});
-
-$('filterSubject').addEventListener('change',e=>{filterSubject=e.target.value;renderTasks();});
-$('weekDays').addEventListener('click',e=>{const b=e.target.closest('[data-date]');if(!b)return;selectedDate=b.dataset.date;weekStart=mondayOf(selectedDate);selectedMonth=monthISO(selectedDate);selectedYear=selectedMonth.split('-')[0];render();});$('prevWeek').addEventListener('click',()=>{weekStart=dateAdd(weekStart,-7);selectedDate=weekStart;selectedMonth=monthISO(selectedDate);selectedYear=selectedMonth.split('-')[0];render();});
-$('nextWeek').addEventListener('click',()=>{weekStart=dateAdd(weekStart,7);selectedDate=weekStart;selectedMonth=monthISO(selectedDate);selectedYear=selectedMonth.split('-')[0];render();});$('todayBtn').addEventListener('click',()=>{selectedDate=todayISO();selectedMonth=monthISO(todayISO());selectedYear=selectedMonth.split('-')[0];weekStart=mondayOf(selectedDate);render();});
-
-// Xử lý sự kiện hoàn thành bài tập (pháo hoa, âm thanh Ting Ting và thông báo giữa màn hình)
-$('taskDays').addEventListener('click',e=>{
- const toggle=e.target.closest('[data-toggle]');
- if(toggle){
-   const t=state.tasks.find(x=>x.id===toggle.dataset.toggle);
-   if(!t)return;
-   t.done=toggle.checked;
-   t.completedAt=t.done?new Date().toISOString():'';
-   save();render();
-   
-   if (t.done) {
-     // 1. Pháo hoa bắn tung tóe
-     confetti({
-       particleCount: 150,
-       spread: 100,
-       origin: { y: 0.5 }
-     });
-
-     // 2. Hiện bảng thông báo chính giữa màn hình
-     const starToast = $('star-toast');
-     starToast.classList.remove('show-toast');
-     void starToast.offsetWidth; // Reset animation
-     starToast.classList.add('show-toast');
-
-     // 3. Phát âm thanh Ting Ting vui nhộn
-     const applause = $('applauseAudio');
-     if (applause) {
-       applause.currentTime = 0;
-       applause.play().catch(err => console.log("Trình duyệt chặn autoplay:", err));
-     }
-   }
-   return;
- }
- const edit=e.target.closest('[data-edit-task]');if(edit){const t=state.tasks.find(x=>x.id===edit.dataset.editTask);if(t)openTask(t);return;}
- const del=e.target.closest('[data-delete-task]');if(del){const t=state.tasks.find(x=>x.id===del.dataset.deleteTask);if(t&&confirm(`Xóa bài “${t.title}”?`)){state.tasks=state.tasks.filter(x=>x.id!==t.id);save();render();toast('Đã xóa bài tập.');}return;}
- const add=e.target.closest('[data-add-date]');if(add)openTask(null,add.dataset.addDate);
-});
-
-$('taskForm').addEventListener('submit',e=>{
- e.preventDefault();
- const id=$('taskId').value;
- const old=state.tasks.find(t=>t.id===id);
- const date=$('taskDate').value;
- if(!date){toast('Vui lòng chọn ngày giao bài.');return;}
- const t={
-   id: id ? id : uid(),
-   title:$('taskTitle').value.trim(),
-   subject:$('taskSubject').value,
-   date: date,
-   due:$('taskDue').value,
-   detail:$('taskDetail').value.trim(),
-   points:Math.max(0,Number($('taskPoints').value) ? Number($('taskPoints').value) : 0),
-   done:old ? old.done : false,
-   completedAt:old ? old.completedAt : ''
- };
- if(!t.title)return;
- if(old) {
-   state.tasks=state.tasks.map(x=>x.id===id?t:x);
- } else {
-   state.tasks.push(t);
- }
- selectedDate=date;
- selectedMonth=monthISO(date);
- selectedYear=selectedMonth.split('-')[0];
- weekStart=mondayOf(date);
- save();
- $('taskDialog').close();
- render();
- toast(old?'Đã cập nhật bài tập.':'Đã giao bài mới.');
-});
-
-$('addRewardBtn').addEventListener('click',()=>openReward());
-
-$('rewardsContainer').addEventListener('click',e=>{
- const redeem=e.target.closest('[data-redeem]');
- if(redeem){
-   const r=state.rewards.find(x=>x.id===redeem.dataset.redeem);
-   if(!r)return;
-   if(earnedPoints()<Number(r.cost)){toast('Con chưa đủ điểm để đổi phần quà này.');return;}
-   if(confirm(`Đổi “${r.name}” với ${r.cost} điểm nhé?`)){
-     state.redemptions.push({id:uid(),rewardId:r.id,name:r.name,cost:Number(r.cost),date:todayISO()});
-     save();
-     renderStats(); 
-     renderRewards();
-     toast('Đổi quà thành công! 🎁');
-   }
-   return;
- }
- 
- const undoRedeem = e.target.closest('[data-undo-redeem]');
- if (undoRedeem) {
-    const rId = undoRedeem.dataset.undoRedeem;
-    const item = state.redemptions.find(x => x.id === rId);
-    if(item && confirm(`Hoàn tác phần quà “${item.name}”? Điểm sẽ được cộng lại.`)) {
-       state.redemptions = state.redemptions.filter(x => x.id !== rId);
-       save();
-       renderStats();
-       renderRewards();
-       toast('Đã hoàn tác, điểm đã được hoàn lại! ↩️');
+  // ==========================================
+  // 📝 BÀI TẬP TỰ CHẤM 10-20 CÂU
+  // ==========================================
+  $('btnGenMath10').onclick = () => {
+    let lines = [];
+    for (let i = 0; i < 10; i++) {
+      const a = Math.floor(Math.random() * 50) + 10;
+      const b = Math.floor(Math.random() * 40) + 5;
+      lines.push(i % 2 === 0 ? `${a} + ${b} = ? | ${a + b}` : `${a + b} - ${b} = ? | ${a}`);
     }
-    return;
- }
+    $('taskQuestions').value = lines.join('\n');
+    toast('Đã tạo nhanh 10 câu Toán!');
+  };
 
- const edit=e.target.closest('[data-edit-reward]');if(edit){const r=state.rewards.find(x=>x.id===edit.dataset.editReward);if(r)openReward(r);return;}
- const del=e.target.closest('[data-delete-reward]');if(del){const r=state.rewards.find(x=>x.id===del.dataset.deleteReward);if(r&&confirm(`Xóa phần thưởng “${r.name}”?`)){state.rewards=state.rewards.filter(x=>x.id!==r.id);save();renderRewards();toast('Đã xóa phần thưởng.');}}
-});
+  function openQuizModal(task) {
+    currentActiveQuizTask = task;
+    $('quizModalTitle').textContent = `📝 ${task.title}`;
+    $('quizResultBox').style.display = 'none';
+    $('btnSubmitQuiz').style.display = 'inline-block';
+    
+    const questions = task.questions || [];
+    $('quizCounterText').textContent = `Tổng số: ${questions.length} câu hỏi`;
 
-$('rewardForm').addEventListener('submit',e=>{
- e.preventDefault();
- const id=$('rewardId').value;
- const old=state.rewards.find(r=>r.id===id);
- const r={
-   id: id ? id : uid(),
-   name:$('rewardName').value.trim(),
-   desc:$('rewardDesc').value.trim(),
-   cost:Math.max(1,Number($('rewardCost').value) ? Number($('rewardCost').value) : 1)
- };
- if(old){
-   state.rewards=state.rewards.map(x=>x.id===id?r:x);
- } else {
-   state.rewards.push(r);
- }
- save();
- $('rewardDialog').close();
- renderRewards();
- toast(old?'Đã cập nhật phần thưởng.':'Đã thêm phần thưởng.');
-});
+    $('quizContainer').innerHTML = questions.map((item, index) => {
+      let savedAnswer = (task.answers && task.answers[index]) ? task.answers[index] : '';
+      return `
+        <div class="quiz-question-row">
+          <div class="quiz-q-title">
+            <span><b>Câu ${index + 1}:</b> ${escapeHTML(item.q)}</span>
+            <span class="quiz-result-tag" id="tagRes_${index}" style="display:none;"></span>
+          </div>
+          <input type="text" id="quizInp_${index}" value="${escapeHTML(savedAnswer)}" placeholder="Điền đáp án..." style="padding:6px 10px; font-weight:700; font-size:13px;">
+        </div>
+      `;
+    }).join('');
 
-$('editGoalBtn').addEventListener('click',()=>{$('goalInput').value=state.goal;$('goalDialog').showModal();});$('goalForm').addEventListener('submit',e=>{
-  e.preventDefault();
-  let inp = Number($('goalInput').value) ? Number($('goalInput').value) : 100;
-  state.goal=Math.min(100,Math.max(1,inp));
-  save();
-  $('goalDialog').close();
-  renderGoal();
-  toast('Đã cập nhật mục tiêu tuần.');
-});
-
-$('weeklyReportBtn').addEventListener('click',weeklyReport);$('historyFilter').addEventListener('change',renderHistory);
-$('historySearch').addEventListener('input',renderHistory);$('backupBtn').addEventListener('click',exportData);
-$('exportBtn').addEventListener('click',exportData);$('syncGasBtn').addEventListener('click', syncFromGAS);
-
-$('restoreInput').addEventListener('change',async e=>{
-  const file=e.target.files?.[0];
-  if(!file)return;
-  try{
-    const parsed=JSON.parse(await file.text());
-    if(!parsed||!Array.isArray(parsed.tasks)||!Array.isArray(parsed.rewards)) throw new Error('File không đúng định dạng');
-    if(!confirm('Khôi phục sẽ thay thế dữ liệu hiện tại. Bạn đã có bản sao dữ liệu cũ chưa?')) return;
-    state={...defaultState(),...parsed};
-    save();render();toast('Đã khôi phục dữ liệu thành công.');
-  }catch(err){alert('Không thể khôi phục: '+err.message);}
-  finally{e.target.value='';}
-});
-
-$('resetBtn').addEventListener('click',()=>{
-  if(confirm('Khôi phục dữ liệu mẫu? Dữ liệu hiện tại sẽ bị thay thế. Nên tải bản sao trước khi tiếp tục.')){
-    state=defaultState();save();
-    selectedMonth=monthISO(todayISO());
-    selectedYear=selectedMonth.split('-')[0];
-    selectedDate=todayISO();
-    weekStart=mondayOf(selectedDate);
-    render();toast('Đã khôi phục dữ liệu mẫu.');
+    $('quizDialog').showModal();
   }
-});
 
-document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>$(b.dataset.close).close()));
-document.querySelectorAll('dialog').forEach(d=>d.addEventListener('click',e=>{if(e.target===d)d.close();}));
+  $('btnSubmitQuiz').onclick = async () => {
+    if (!currentActiveQuizTask) return;
+    const questions = currentActiveQuizTask.questions || [];
+    let correctCount = 0, childAnswers = [];
 
-// Khởi chạy
-render();
+    questions.forEach((item, index) => {
+      const inp = $(`quizInp_${index}`);
+      const userVal = (inp ? inp.value : '').trim().toLowerCase();
+      const correctVal = (item.a || '').trim().toLowerCase();
+      childAnswers.push(inp ? inp.value.trim() : '');
+
+      const tag = $(`tagRes_${index}`);
+      if (userVal === correctVal) {
+        correctCount++;
+        if (tag) { tag.textContent = '✓ Đúng'; tag.className = 'quiz-result-tag res-correct'; tag.style.display = 'inline-block'; }
+      } else {
+        if (tag) { tag.textContent = `✗ Sai (${item.a})`; tag.className = 'quiz-result-tag res-wrong'; tag.style.display = 'inline-block'; }
+      }
+    });
+
+    currentActiveQuizTask.answers = childAnswers;
+    const total = questions.length;
+    const score10 = ((correctCount / total) * 10).toFixed(1);
+    const scorePercent = Math.round((correctCount / total) * 100);
+
+    const resBox = $('quizResultBox');
+    resBox.style.display = 'block';
+    if (scorePercent >= 70) {
+      resBox.style.background = '#e1f5ec'; resBox.style.border = '1px solid #c3ebda'; resBox.style.color = '#36795f';
+      resBox.innerHTML = `<h3 style="margin:0 0 4px;">🎉 Điểm số: ${score10}/10 (Đúng ${correctCount}/${total} câu)</h3><p style="margin:0; font-size:13px;">Xuất sắc! Con đã hoàn thành bài tập và nhận sao thưởng ⭐!</p>`;
+      
+      if (sb) {
+        await sb.from('task_submissions').insert([{
+          task_id: currentActiveQuizTask.id,
+          proof_url: '',
+          note: `Làm đúng ${correctCount}/${total} câu (${score10}/10 điểm)`,
+          status: 'approved'
+        }]);
+        triggerCelebration(currentActiveQuizTask.points || 1);
+        await loadDataFromSupabase();
+      }
+    } else {
+      resBox.style.background = '#fff0f4'; resBox.style.border = '1px solid #f6cfda'; resBox.style.color = '#a64e68';
+      resBox.innerHTML = `<h3 style="margin:0 0 4px;">🌱 Điểm số: ${score10}/10 (Đúng ${correctCount}/${total} câu)</h3><p style="margin:0; font-size:13px;">Con xem lại các câu báo màu đỏ và thử làm lại để đạt điểm cao hơn nhé!</p>`;
+    }
+  };
+
+  // ==========================================
+  // 🎁 GÓC ĐỔI QUÀ
+  // ==========================================
+  function renderRewards() {
+    const currentPts = earnedPoints();
+    $('rewardsList').innerHTML = state.rewards.map(r => {
+      const canRedeem = currentPts >= r.cost;
+      const adminBtns = isAdminUnlocked ? `<button class="icon-btn" data-delete-reward="${r.id}" title="Xóa quà">🗑️</button>` : '';
+
+      return `
+        <div class="reward-card">
+          <div class="row-between"><h3>🎁 ${escapeHTML(r.name)}</h3><span class="points">${r.cost} ⭐</span></div>
+          <p>${escapeHTML(r.desc_text || '')}</p>
+          <div class="flex">
+            <button class="btn btn-primary btn-small" data-redeem="${r.id}" ${canRedeem ? '' : 'disabled style="opacity:0.5;cursor:not-allowed;"'}>Đổi quà</button>
+            ${adminBtns}
+          </div>
+        </div>
+      `;
+    }).join('') || '<div class="empty">Chưa có quà. Mẹ bấm "＋ Thêm" nhé!</div>';
+
+    $('redeemHistoryList').innerHTML = state.redemptions.map(red => `
+      <div style="display:flex; justify-content:space-between; font-size:12px; background:#fff8fa; padding:6px 10px; border-radius:8px; margin-bottom:5px;">
+        <span><strong>${escapeHTML(red.name)}</strong> (-${red.cost}⭐)</span>
+        <span style="color:#888;">${new Date(red.created_at).toLocaleDateString('vi-VN')}</span>
+      </div>
+    `).join('') || '<div class="small-note" style="text-align:center;">Chưa đổi quà nào.</div>';
+  }
+
+  $('addRewardBtn').onclick = () => {
+    $('rewardForm').reset();
+    $('rewardDialog').showModal();
+  };
+
+  $('rewardForm').onsubmit = async e => {
+    e.preventDefault();
+    const name = $('rewardName').value.trim();
+    const desc = $('rewardDesc').value.trim();
+    const cost = Number($('rewardCost').value) || 10;
+    if (!name) return;
+
+    if (sb) {
+      const { error } = await sb.from('rewards').insert([{ name, desc_text: desc, cost }]);
+      if (error) alert('Lỗi thêm quà: ' + error.message);
+      else {
+        toast('🎉 Đã thêm phần quà mới!');
+        await loadDataFromSupabase();
+      }
+    }
+    $('rewardDialog').close();
+  };
+
+  document.addEventListener('click', async e => {
+    const redBtn = e.target.closest('[data-redeem]');
+    if (redBtn) {
+      const r = state.rewards.find(x => x.id === redBtn.dataset.redeem);
+      if (!r) return;
+      if (earnedPoints() < r.cost) return alert('Con chưa đủ sao để đổi phần quà này rồi!');
+      if (confirm(`Con muốn đổi quà "${r.name}" với ${r.cost} sao thưởng nhé?`)) {
+        if (sb) await sb.from('redemptions').insert([{ reward_id: r.id, name: r.name, cost: r.cost }]);
+        triggerCelebration(0);
+        toast('🎉 Đổi quà thành công!');
+        loadDataFromSupabase();
+      }
+      return;
+    }
+
+    const delRewBtn = e.target.closest('[data-delete-reward]');
+    if (delRewBtn && confirm('Mẹ có chắc muốn xóa phần quà này?')) {
+      if (sb) await sb.from('rewards').delete().eq('id', delRewBtn.dataset.deleteReward);
+      toast('Đã xóa phần thưởng!');
+      loadDataFromSupabase();
+      return;
+    }
+  });
+
+  // MỤC TIÊU TUẦN
+  $('editGoalBtn').onclick = () => { $('goalInput').value = state.goal; $('goalDialog').showModal(); };
+  $('goalForm').onsubmit = e => {
+    e.preventDefault();
+    state.goal = Math.min(100, Math.max(1, Number($('goalInput').value) || 100));
+    $('goalDialog').close();
+    renderGoal();
+    toast('Đã lưu mục tiêu tuần!');
+  };
+  $('weeklyReportBtn').onclick = () => {
+    const ts = weekTasks();
+    const d = ts.filter(t => state.submissions.some(sub => sub.task_id === t.id && sub.status === 'approved')).length;
+    const p = ts.length ? Math.round((d / ts.length) * 100) : 0;
+    $('reportContent').innerHTML = `
+      <p><b>Tuần:</b> ${escapeHTML(shortDate(weekStart))} – ${escapeHTML(shortDate(dateAdd(weekStart,6)))}</p>
+      <div class="stat">
+        <div class="label">KPI TUẦN</div>
+        <div class="value">${p}%</div>
+        <div class="progress" style="margin:10px 0;"><span style="width:${p}%"></span></div>
+        <div class="hint">${d}/${ts.length} bài đã hoàn thành</div>
+      </div>
+    `;
+    $('reportDialog').showModal();
+  };
+
+  // ==========================================
+  // THAO TÁC NỘP BÀI & DUYỆT BÀI (HỖ TRỢ LÀM LẠI)
+  // ==========================================
+  document.addEventListener('click', e => {
+    const openQuiz = e.target.closest('[data-open-quiz]');
+    if (openQuiz) {
+      const t = state.tasks.find(x => x.id === openQuiz.dataset.openQuiz);
+      if (t) openQuizModal(t);
+      return;
+    }
+
+    // Bấm Nộp bài hoặc Nộp lại bài
+    const subBtn = e.target.closest('[data-submit-task]');
+    if (subBtn) {
+      const t = state.tasks.find(x => x.id === subBtn.dataset.submitTask);
+      if (!t) return;
+      const sub = state.submissions.find(s => s.task_id === t.id);
+
+      $('proofTaskId').value = t.id;
+      $('proofTaskTitle').textContent = `Bài tập: ${t.title} (${t.subject})`;
+      $('proofNote').value = '';
+      resetProofFile();
+
+      // Nếu có lời nhắc làm lại từ mẹ thì hiện rõ ràng lên modal
+      if (sub && sub.status === 'redo') {
+        $('submitProofModalTitle').textContent = '🔄 Nộp lại bài tập';
+        $('proofMomAlert').style.display = 'block';
+        $('proofMomAlert').innerHTML = `<b>👩 Lời nhắn từ Mẹ:</b> "${escapeHTML(sub.note || 'Con kiểm tra lại bài và làm lại nhé!')}"`;
+      } else {
+        $('submitProofModalTitle').textContent = '📝 Nộp bài tập';
+        $('proofMomAlert').style.display = 'none';
+      }
+
+      $('submitProofDialog').showModal();
+      return;
+    }
+
+    const viewBtn = e.target.closest('[data-view-proof]');
+    if (viewBtn) {
+      const t = state.tasks.find(x => x.id === viewBtn.dataset.viewProof);
+      const sub = state.submissions.find(s => s.task_id === t.id);
+      if (!t || !sub) return;
+      currentReviewTask = { task: t, submission: sub };
+      $('reviewTitle').textContent = `Bài: ${t.title} (${t.subject})`;
+      $('reviewNote').textContent = sub.note ? `Ghi chú: "${sub.note}"` : 'Con không để lại lời nhắn.';
+      
+      const box = $('reviewFileContainer');
+      box.innerHTML = '';
+      if (sub.proof_url) {
+        const isImg = /\.(jpeg|jpg|png|gif|webp)$/i.test(sub.proof_url);
+        if (isImg) {
+          box.innerHTML = `<img src="${sub.proof_url}" style="max-width:100%; max-height:400px; border-radius:12px; border:1px solid #f3cbd7;">`;
+        } else {
+          box.innerHTML = `<a href="${sub.proof_url}" target="_blank" class="btn btn-primary">📥 Mở tệp con đã nộp (Tài liệu / PDF / Ghi âm)</a>`;
+        }
+      } else {
+        box.innerHTML = `<div class="small-note" style="color:#36795f; font-weight:700;">Con làm bài trực tuyến (không đính kèm file)</div>`;
+      }
+      $('reviewDialog').showModal();
+      return;
+    }
+
+    const approveBtn = e.target.closest('[data-quick-approve]');
+    if (approveBtn) {
+      approveSubmission(approveBtn.dataset.quickApprove, Number(approveBtn.dataset.pts));
+      return;
+    }
+
+    const delBtn = e.target.closest('[data-delete-task]');
+    if (delBtn && confirm('Mẹ có chắc muốn xóa bài này không?')) {
+      if (sb) {
+        sb.from('tasks').delete().eq('id', delBtn.dataset.deleteTask).then(() => {
+          loadDataFromSupabase();
+          toast('Đã xóa bài tập!');
+        });
+      }
+      return;
+    }
+  });
+
+  // SUBMIT BÀI LÀM (HỖ TRỢ CẢ NỘP LẦN ĐẦU VÀ NỘP LẠI)
+  $('submitProofForm').onsubmit = async e => {
+    e.preventDefault();
+    const taskId = $('proofTaskId').value;
+    const note = $('proofNote').value.trim();
+
+    const btn = $('btnUploadProof');
+    btn.disabled = true;
+    btn.textContent = 'Đang gửi bài... ⏳';
+
+    try {
+      if (!sb) throw new Error("Chưa kết nối Supabase.");
+      let publicUrl = '';
+
+      if (currentProofFile) {
+        btn.textContent = 'Đang tải tệp lên... ⏳';
+        const ext = currentProofFile.name ? currentProofFile.name.split('.').pop() : 'png';
+        const filePath = `${Date.now()}_screenshot.${ext}`;
+
+        const { error: upErr } = await sb.storage.from('proofs').upload(filePath, currentProofFile);
+        if (upErr) throw upErr;
+
+        const { data: { publicUrl: pUrl } } = sb.storage.from('proofs').getPublicUrl(filePath);
+        publicUrl = pUrl;
+      }
+
+      // Kiểm tra xem đã từng có bài nộp trước đó chưa
+      const existingSub = state.submissions.find(s => s.task_id === taskId);
+      if (existingSub) {
+        // Cập nhật lại bài nộp cũ sang trạng thái pending chờ mẹ duyệt lại
+        const { error: upErr } = await sb.from('task_submissions').update({
+          proof_url: publicUrl || existingSub.proof_url || '',
+          note: note || (existingSub.status === 'redo' ? 'Con đã sửa và nộp lại bài ạ!' : (currentProofFile ? 'Con gửi ảnh chụp bài làm' : 'Con đã hoàn thành bài tập ạ!')),
+          status: 'pending'
+        }).eq('id', existingSub.id);
+        if (upErr) throw upErr;
+      } else {
+        // Tạo bài nộp mới lần đầu
+        const { error: insErr } = await sb.from('task_submissions').insert([{
+          task_id: taskId,
+          proof_url: publicUrl,
+          note: note || (currentProofFile ? 'Con gửi ảnh chụp bài làm' : 'Con đã hoàn thành bài tập ạ!'),
+          status: 'pending'
+        }]);
+        if (insErr) throw insErr;
+      }
+
+      $('submitProofDialog').close();
+      toast('🎉 Hoan hô! Đã nộp bài cho Mẹ xem rồi nhé!');
+      await loadDataFromSupabase();
+    } catch(err) {
+      alert('Lỗi nộp bài: ' + err.message);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Nộp bài ngay 🎉';
+    }
+  };
+
+  async function approveSubmission(submissionId, pts = 1) {
+    if (!sb) return;
+    const { error } = await sb.from('task_submissions').update({ status: 'approved' }).eq('id', submissionId);
+    if (!error) {
+      triggerCelebration(pts);
+      loadDataFromSupabase();
+    }
+  }
+
+  $('btnApproveProof').onclick = () => {
+    if (currentReviewTask) {
+      approveSubmission(currentReviewTask.submission.id, currentReviewTask.task.points);
+      $('reviewDialog').close();
+    }
+  };
+
+  // MẸ BẤM NHẮC CON LÀM LẠI (CHO PHÉP GÕ LỜI NHẮC CỤ THỂ)
+  $('btnRejectProof').onclick = async () => {
+    if (!currentReviewTask) return;
+    const sub = currentReviewTask.submission;
+
+    const reason = prompt(
+      "Mẹ nhập lời nhắn cho con nhé (Ví dụ: Con tính lại câu 3 và kiểm tra lại đáp án nhé):",
+      "Con kiểm tra lại bài và làm lại giúp mẹ nhé!"
+    );
+    if (reason === null) return; // Mẹ bấm Hủy
+
+    const message = reason.trim() || "Con kiểm tra lại bài và làm lại giúp mẹ nhé!";
+
+    if (sb) {
+      // Cập nhật trạng thái sang redo và lưu lời nhắn của mẹ
+      await sb.from('task_submissions').update({
+        status: 'redo',
+        note: message
+      }).eq('id', sub.id);
+
+      $('reviewDialog').close();
+      toast('Đã gửi lời nhắc làm lại cho con! 📢');
+      await loadDataFromSupabase();
+    }
+  };
+
+  // ==========================================
+  // GIAO BÀI TẬP (MẸ)
+  // ==========================================
+  $('btnMainAddTask').onclick = () => {
+    $('taskForm').reset();
+    $('taskId').value = '';
+    $('taskDate').value = selectedDate;
+    $('taskQuestions').value = '';
+    $('taskDialog').showModal();
+  };
+
+  $('taskForm').onsubmit = async e => {
+    e.preventDefault();
+    const title = $('taskTitle').value.trim();
+    const subject = $('taskSubject').value;
+    const taskDate = $('taskDate').value;
+    const detail = $('taskDetail').value.trim();
+    const points = Number($('taskPoints').value) || 1;
+
+    const qRaw = $('taskQuestions').value.trim();
+    let parsedQuestions = [];
+    if (qRaw) {
+      qRaw.split('\n').forEach(line => {
+        if (line.includes('|')) {
+          const [q, a] = line.split('|');
+          if (q.trim() && a.trim()) parsedQuestions.push({ q: q.trim(), a: a.trim() });
+        }
+      });
+    }
+
+    if (sb) {
+      const { error } = await sb.from('tasks').insert([{
+        title, subject, task_date: taskDate, detail, points,
+        questions: parsedQuestions.length > 0 ? parsedQuestions : null
+      }]);
+      if (!error) {
+        $('taskDialog').close();
+        toast('Đã giao bài tập mới!');
+        await loadDataFromSupabase();
+      } else {
+        alert('Lỗi giao bài: ' + error.message);
+      }
+    }
+  };
+
+  // ROLE SWITCH
+  $('btnRoleKid').onclick = () => {
+    isAdminUnlocked = false;
+    $('appBody').classList.remove('unlocked');
+    $('btnRoleKid').classList.add('active');
+    $('btnRoleMom').classList.remove('active');
+    renderTasks();
+    renderRewards();
+  };
+
+  $('btnRoleMom').onclick = () => {
+    if (!isAdminUnlocked) {
+      const pwd = prompt("Nhập mật mã của Mẹ để giao và duyệt bài:");
+      if (pwd === "2017") {
+        isAdminUnlocked = true;
+        $('appBody').classList.add('unlocked');
+        $('btnRoleMom').classList.add('active');
+        $('btnRoleKid').classList.remove('active');
+        renderTasks();
+        renderRewards();
+        toast('Chào Mẹ! Mẹ có thể giao bài, thêm quà và duyệt bài.');
+      } else if (pwd !== null) {
+        alert('Sai mật khẩu rồi mẹ ơi!');
+      }
+    } else {
+      $('btnRoleMom').classList.add('active');
+      $('btnRoleKid').classList.remove('active');
+    }
+  };
+
+  // ĐIỀU HƯỚNG LỊCH
+  document.addEventListener('click', e => {
+    const tab = e.target.closest('[data-month]');
+    if (tab) { selectedMonth = tab.dataset.month; selectedDate = selectedMonth + '-01'; weekStart = mondayOf(selectedDate); render(); }
+    const b = e.target.closest('[data-date]');
+    if (b) { selectedDate = b.dataset.date; weekStart = mondayOf(selectedDate); selectedMonth = monthISO(selectedDate); render(); }
+  });
+  $('prevWeek').onclick = () => { weekStart = dateAdd(weekStart, -7); selectedDate = weekStart; selectedMonth = monthISO(selectedDate); render(); };
+  $('nextWeek').onclick = () => { weekStart = dateAdd(weekStart, 7); selectedDate = weekStart; selectedMonth = monthISO(selectedDate); render(); };
+  $('todayBtn').onclick = () => { selectedDate = todayISO(); selectedMonth = monthISO(todayISO()); weekStart = mondayOf(selectedDate); render(); };
+  $('filterSubject').onchange = e => { filterSubject = e.target.value; renderTasks(); };
+
+  document.querySelectorAll('[data-close]').forEach(b => b.onclick = () => $(b.dataset.close).close());
+
+  // KHỞI CHẠY
+  updateSheetLinkUI();
+  loadDataFromSupabase();
 })();
 </script>
 </body>
